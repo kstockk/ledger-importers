@@ -14,6 +14,8 @@ import csv
 import os
 import re
 
+# Credit to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
+
 class CSVImporter(importer.ImporterProtocol):
     def identify(self, f):
         return re.match('test.csv', os.path.basename(f.name))
