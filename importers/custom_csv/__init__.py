@@ -8,8 +8,6 @@ from beancount.core.position import Cost
 
 from dateutil.parser import parse
 
-from titlecase import titlecase
-
 import csv
 import os
 import re
@@ -18,18 +16,18 @@ import re
 
 class CSVImporter(importer.ImporterProtocol):
     def identify(self, f):
-        return re.match('test.csv', os.path.basename(f.name))
+        return re.match('transactions_.*\.csv', os.path.basename(f.name))
 
     def extract(self, f):
         entries = []
 
         with open(f.name) as f:
             for index, row in enumerate(csv.DictReader(f)):
-                trans_acc = titlecase(row['Account'])
+                trans_acc = row['Account']
                 trans_date = parse(row['Date']).date()
-                trans_payee = titlecase(row['Payee'])
-                trans_cat = titlecase(row['Category'])
-                trans_desc = titlecase(row['Memo'])
+                trans_payee = row['Payee']
+                trans_cat = row['Category']
+                trans_desc = row['Memo']
                 trans_amt  = row['Amount']
                 
                 meta = data.new_metadata(f.name, index)
