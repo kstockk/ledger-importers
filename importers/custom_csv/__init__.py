@@ -16,17 +16,20 @@ import yaml
 # Credit to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
 class CSVImporter(importer.ImporterProtocol):
+    def __init__(self, yaml_config):
+        self.yaml_config = yaml_config
+
     def identify(self, f):
         return re.match('transactions_.*\.csv', os.path.basename(f.name))
 
     def extract(self, f):
         entries = []
 
-        with open('config.yaml', 'r') as stream:
-            try:
-                yaml_config = yaml.safe_load(stream)
-            except yaml.YAMLError as exc:
-                print(exc)
+        # with open('config.yaml', 'r') as stream:
+        #     try:
+        #         yaml_config = yaml.safe_load(stream)
+        #     except yaml.YAMLError as exc:
+        #         print(exc)
 
         with open(f.name) as f:
             for index, row in enumerate(csv.DictReader(f)):
@@ -51,8 +54,8 @@ class CSVImporter(importer.ImporterProtocol):
                     postings=[],
                 )
 
-                account = yaml_config['account_map'].get(trans_account) or trans_account
-                category = yaml_config['account_map'].get(trans_category) or trans_category
+                account = self.yaml_config['account_map'].get(trans_account) or trans_account
+                category = self.yaml_config['account_map'].get(trans_category) or trans_category
                 
                 txn.postings.append(
                     data.Posting(account, amount.Amount(D(trans_amt),
