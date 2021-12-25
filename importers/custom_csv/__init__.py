@@ -1,3 +1,4 @@
+
 from beancount.core.number import D
 from beancount.ingest import importer
 from beancount.core import account
@@ -16,54 +17,47 @@ import yaml
 # Credit to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
 class CSVImporter(importer.ImporterProtocol):
-    def __init__(self, yaml_config):
-        self.yaml_config = yaml_config
-
     def identify(self, f):
-        return re.match('transactions_.*\.csv', os.path.basename(f.name))
+        return re.match("custom_csv_.*\.csv", os.path.basename(f.name))
 
     def extract(self, f):
         entries = []
 
-        # with open('config.yaml', 'r') as stream:
-        #     try:
-        #         yaml_config = yaml.safe_load(stream)
-        #     except yaml.YAMLError as exc:
-        #         print(exc)
-
         with open(f.name) as f:
             for index, row in enumerate(csv.DictReader(f)):
-                trans_account = row['Account']
-                trans_date = parse(row['Date']).date()
-                trans_payee = row['Payee']
-                trans_category = row['Category']
-                trans_desc = row['Memo']
-                trans_amt  = row['Amount']
-                trans_tag = row['Tags']
+                date = parse(row["Date"]).date()
+                payee = row["Payee"]
+                desc = row["Description"]
                 
+                tags = row["Tags"].lower()
+                tags = tuple(tags.split(","))    
+
+                p_dict = {
+                    row["Account1"]: row["Amount1"],
+                    row["Account2"]: row["Amount2"],
+                    row["Account3"]: row["Amount3"],
+                    row["Account4"]: row["Amount4"]
+                }
+
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
                     meta=meta,
-                    date=trans_date,
+                    date=date,
                     flag=flags.FLAG_OKAY,
-                    payee=trans_payee,
-                    narration=trans_desc,
-                    tags=set(tuple([trans_tag])),
+                    payee=payee,
+                    narration=desc,
+                    tags=set(filter(None, tags)),
                     links=set(),
                     postings=[],
                 )
-
-                account = self.yaml_config['account_map'].get(trans_account) or trans_account
-                category = self.yaml_config['account_map'].get(trans_category) or trans_category
                 
-                txn.postings.append(
-                    data.Posting(account, amount.Amount(D(trans_amt),
-                        'AUD'), None, None, None, None)
-                )
-                txn.postings.append(
-                    data.Posting(category, None, None, None, None, None)
-                )
+                for k, v in p_dict.items():
+                    if k:
+                        txn.postings.append(
+                            data.Posting(k, amount.Amount(D(v) if v else None,
+                                "AUD" if v else None), None, None, None, None)
+                        )
 
                 entries.append(txn)
 
