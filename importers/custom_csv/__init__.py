@@ -18,7 +18,7 @@ import yaml
 
 class CSVImporter(importer.ImporterProtocol):
     def identify(self, f):
-        return re.match("custom_csv_.*\.csv", os.path.basename(f.name))
+        return re.match("c_.*\.csv", os.path.basename(f.name))
 
     def extract(self, f):
         entries = []
