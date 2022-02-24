@@ -1,4 +1,4 @@
-
+from decimal import Decimal
 from beancount.core.number import D
 from beancount.ingest import importer
 from beancount.core import account
@@ -44,7 +44,8 @@ class CSVImporter(importer.ImporterProtocol):
 
                 empty_accounts = sum(1 for i in p_dict.keys() if i == "")
                 if check_values != 0:
-                    pro_rata = round(-check_values/empty_accounts, 2)
+                    pro_rata = D(-check_values/empty_accounts)
+                    pro_rata = pro_rata.quantize(Decimal(10) ** -2).normalize()
 
                 meta = data.new_metadata(f.name, index)
 
@@ -62,7 +63,7 @@ class CSVImporter(importer.ImporterProtocol):
                 for k, v in p_dict.items():
                     if k:
                         txn.postings.append(
-                            data.Posting(k, amount.Amount(D(v) if v else D(pro_rata),
+                            data.Posting(k, amount.Amount(D(v) if v else pro_rata,
                                 "AUD"), None, None, None, None)
                         )
 
