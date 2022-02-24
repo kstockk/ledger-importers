@@ -40,7 +40,7 @@ class CSVImporter(importer.ImporterProtocol):
                 }
 
                 values = list(filter(lambda x: x!= "", p_dict.values()))
-                check_values = sum(map(int, values))
+                check_values = sum(map(float, values))
 
                 empty_accounts = sum(1 for i in p_dict.keys() if i == "")
                 if check_values != 0:
