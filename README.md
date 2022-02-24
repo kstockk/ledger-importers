@@ -1,7 +1,17 @@
+# beancount_importers
 
-# Beancount-Importers
+Custom beancount/fava importers...
 
-To Run/Test
+## Master Beancount Custom Entries
+
+Ensure the following two custome entries are in your master.beancount file
+
+```
+2017-07-01 custom "fava-option" "import-config" "/bean/config/config.py"
+2017-07-01 custom "fava-option" "import-dirs" "import_files/"
+```
+
+## To Run/Test
 
 ```
 bean-extract config.py importers/custom_csv/c_sample.csv 
