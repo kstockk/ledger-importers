@@ -39,6 +39,13 @@ class CSVImporter(importer.ImporterProtocol):
                     row["Account4"]: row["Amount4"]
                 }
 
+                values = list(filter(lambda x: x!= "", p_dict.values()))
+                check_values = sum(map(int, values))
+
+                empty_accounts = sum(1 for i in p_dict.keys() if i == "")
+                if check_values != 0:
+                    pro_rata = -check_values/empty_accounts
+
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
@@ -55,8 +62,8 @@ class CSVImporter(importer.ImporterProtocol):
                 for k, v in p_dict.items():
                     if k:
                         txn.postings.append(
-                            data.Posting(k, amount.Amount(D(v) if v else None,
-                                "AUD" if v else None), None, None, None, None)
+                            data.Posting(k, amount.Amount(D(v) if v else D(pro_rata),
+                                "AUD"), None, None, None, None)
                         )
 
                 entries.append(txn)
