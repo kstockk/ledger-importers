@@ -44,7 +44,7 @@ class CSVImporter(importer.ImporterProtocol):
 
                 empty_accounts = sum(1 for i in p_dict.keys() if i == "")
                 if check_values != 0:
-                    pro_rata = -check_values/empty_accounts
+                    pro_rata = round(-check_values/empty_accounts, 2)
 
                 meta = data.new_metadata(f.name, index)
 
