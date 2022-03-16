@@ -1,20 +1,18 @@
 from decimal import Decimal
 from beancount.core.number import D
 from beancount.ingest import importer
-from beancount.core import account
 from beancount.core import amount
 from beancount.core import flags
 from beancount.core import data
-from beancount.core.position import Cost
 
+from datetime import date
 from dateutil.parser import parse
 
 import csv
 import os
 import re
-import yaml
 
-# Credit to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
+# Credits to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
 class CSVImporter(importer.ImporterProtocol):
     def identify(self, f):
@@ -25,7 +23,7 @@ class CSVImporter(importer.ImporterProtocol):
 
         with open(f.name) as f:
             for index, row in enumerate(csv.DictReader(f)):
-                date = parse(row["Date"]).date()
+                trans_date = parse(row["Date"]).date() if row["Date"] != "" else date.today()
                 payee = row["Payee"]
                 desc = row["Description"]
                 
@@ -51,7 +49,7 @@ class CSVImporter(importer.ImporterProtocol):
 
                 txn = data.Transaction(
                     meta=meta,
-                    date=date,
+                    date=trans_date,
                     flag=flags.FLAG_OKAY,
                     payee=payee,
                     narration=desc,
