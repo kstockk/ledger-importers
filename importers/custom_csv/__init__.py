@@ -1,4 +1,3 @@
-from decimal import Decimal
 from beancount.core.number import D
 from beancount.ingest import importer
 from beancount.core import amount
@@ -8,9 +7,11 @@ from beancount.core import data
 from datetime import date
 from dateutil.parser import parse
 
+from decimal import Decimal
 import csv
 import os
 import re
+import collections
 
 # Credits to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
@@ -30,17 +31,20 @@ class CSVImporter(importer.ImporterProtocol):
                 tags = row["Tags"].lower()
                 tags = tuple(tags.split(","))    
 
-                p_dict = {
-                    row["Account1"]: row["Amount1"],
-                    row["Account2"]: row["Amount2"],
-                    row["Account3"]: row["Amount3"],
-                    row["Account4"]: row["Amount4"]
-                }
+                p_dict = collections.defaultdict(list)
+                for k, v in (
+                    (row["Account1"], row["Amount1"] if row["Amount1"] else 0),
+                    (row["Account2"], row["Amount2"] if row["Amount2"] else 0),
+                    (row["Account3"], row["Amount3"] if row["Amount3"] else 0),
+                    (row["Account4"], row["Amount4"] if row["Amount4"] else 0)
+                    ):
+                    p_dict[k].append(v)
 
-                values = list(filter(lambda x: x!= "", p_dict.values()))
-                check_values = sum(map(float, values))
+                values = list(p_dict.values())
+                check_values = sum(sum(map(Decimal, x)) for x in values)
 
                 empty_accounts = sum(1 for i in p_dict.keys() if i == "")
+                
                 if check_values != 0:
                     pro_rata = D(-check_values/empty_accounts)
                     pro_rata = pro_rata.quantize(Decimal(10) ** -2).normalize()
@@ -58,12 +62,14 @@ class CSVImporter(importer.ImporterProtocol):
                     postings=[],
                 )
                 
-                for k, v in p_dict.items():
-                    if k:
-                        txn.postings.append(
-                            data.Posting(k, amount.Amount(D(v) if v else pro_rata,
-                                "AUD"), None, None, None, None)
-                        )
+                for key, values in p_dict.items():
+                    if key:
+                        if(isinstance(values, list)):
+                            for value in values: 
+                                txn.postings.append(
+                                    data.Posting(key, amount.Amount(D(value) if value else pro_rata,
+                                        "AUD"), None, None, None, None)
+                                )
 
                 entries.append(txn)
 
