@@ -25,6 +25,7 @@ class CSVImporter(importer.ImporterProtocol):
         with open(f.name) as f:
             for index, row in enumerate(csv.DictReader(f)):
                 trans_date = parse(row["Date"]).date() if row["Date"] != "" else date.today()
+                flag= row["Flag"]
                 payee = row["Payee"]
                 desc = row["Description"]
                 
@@ -54,7 +55,7 @@ class CSVImporter(importer.ImporterProtocol):
                 txn = data.Transaction(
                     meta=meta,
                     date=trans_date,
-                    flag=flags.FLAG_OKAY,
+                    flag=flags.FLAG_WARNING if flag == "!" else flags.FLAG_OKAY,
                     payee=payee,
                     narration=desc,
                     tags=set(filter(None, tags)),
