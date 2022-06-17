@@ -4,8 +4,9 @@ import os, sys
 sys.path.append(os.path.dirname(__file__))
 
 # importers located in the importers directory
-from importers import custom_csv
+from importers import custom_csv, budget
 
 CONFIG = [
-     custom_csv.CSVImporter()
+     custom_csv.CSVImporter(),
+     budget.CSVImporter()
 ]
