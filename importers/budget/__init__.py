@@ -1,4 +1,4 @@
-from xml.sax.handler import LexicalHandler
+
 from beancount.core.number import D
 from beancount.ingest import importer
 from beancount.core import amount
