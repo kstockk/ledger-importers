@@ -115,7 +115,7 @@ class CSVImporter(importer.ImporterProtocol):
 
     @staticmethod
     def get_account_map():
-        with open("bean/data/account_map.csv") as f:
+        with open("/bean/data/account_map.csv") as f:
             reader = csv.reader(f)
             account_map = {rows[0]:rows[1] for rows in reader}
             return account_map
