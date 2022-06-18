@@ -40,7 +40,16 @@ class CSVImporter(importer.ImporterProtocol):
                 row['Payee'] = "Transfer"
             
             row["Abs"] = abs(D(row["Amount"]))
-                
+
+            parse_notes = row["Notes"].split(" #", 1)
+            row["Notes"] = parse_notes[0]
+            row["Tags"] = ""
+
+            if len(parse_notes) > 1:
+                tags = parse_notes[1]
+                row["Tags"] = tags.replace("#", "").lower()
+                row["Tags"] = tuple(row["Tags"].split(","))
+
             # Search and replace account and category according to the account map
             for ledger, budget in account_map.items():
                 if row["Account"] == budget and row["Account"]:
@@ -49,7 +58,7 @@ class CSVImporter(importer.ImporterProtocol):
                     row["Category"] = ledger
 
         # Group rows for postings
-        grouper = itemgetter("Date", "Account", "Payee", "Notes")
+        grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
         rows = sorted(rows, key = grouper)
 
         for index, (key, value) in enumerate(groupby(rows, key = grouper)):
@@ -62,7 +71,7 @@ class CSVImporter(importer.ImporterProtocol):
                     flag=flags.FLAG_OKAY,
                     payee=key[2],
                     narration=key[3],
-                    tags=set(),
+                    tags=set(filter(None, key[4])),
                     links=set(),
                     postings=[],
                 )
