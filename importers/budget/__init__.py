@@ -48,7 +48,7 @@ class CSVImporter(importer.ImporterProtocol):
             if len(parse_notes) > 1:
                 tags = parse_notes[1]
                 row["Tags"] = tags.replace("#", "").lower()
-                row["Tags"] = tuple(row["Tags"].split(","))
+                row["Tags"] = tuple(row["Tags"].split(", "))
 
             # Search and replace account and category according to the account map
             for ledger, budget in account_map.items():
