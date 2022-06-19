@@ -56,10 +56,12 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         for index, row in enumerate(rows):
             # Change accounts based on account mapping details
             if account_map and row["Account"]:
-                row["Account"] = account_map[row["Account"]]
+                if row["Account"] in account_map:
+                    row["Account"] = account_map[row["Account"]]
 
-            if account_map and row["Category"]:    
-                row["Category"] = account_map[row["Category"]]
+            if account_map and row["Category"]:
+                if row["Category"] in account_map:    
+                    row["Category"] = account_map[row["Category"]]
 
             # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))

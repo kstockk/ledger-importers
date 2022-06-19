@@ -1,0 +1,342 @@
+Account,Date,Payee,Notes,Category,Amount
+HSBC,2022-06-19,Kroger,,Food,-87.95
+Capital One Checking,2022-06-19,Movies,,Entertainment,-56.18
+Ally Savings,2022-06-19,Kroger,,General,-24.45
+Bank of America,2022-06-19,Publix,,Gift,-3.87
+Bank of America,2022-06-19,Movies,,Food,-1.23
+Bank of America,2022-06-19,Deposit,,Income,556.35
+Bank of America,2022-06-18,Online store,,Restaurants,-2.13
+Bank of America,2022-06-18,Online store,,Food,-2.16
+Bank of America,2022-06-18,Online store,,Clothing,-1.81
+Bank of America,2022-06-18,Online store,,Entertainment,-1.81
+Bank of America,2022-06-18,Online store,,General,-1.81
+HSBC,2022-06-17,Movies,,Gift,-16.63
+Capital One Checking,2022-06-17,Online store,,General,-98.23
+Bank of America,2022-06-17,Deposit,,Income,505.65
+Bank of America,2022-06-17,Deposit,,Income,595.09
+Bank of America,2022-06-17,Movies,,General,-5.4
+Bank of America,2022-06-16,Publix,,Medical,-6.66
+Bank of America,2022-06-16,Publix,,Clothing,-6.7
+Bank of America,2022-06-16,Kroger,,Clothing,-14.78
+Bank of America,2022-06-16,Kroger,,General,-14.78
+Bank of America,2022-06-16,Kroger,,General,-14.78
+HSBC,2022-06-15,Deposit,,Income,653.72
+Capital One Checking,2022-06-15,Publix,,General,-71.4
+Bank of America,2022-06-15,Home Depot,,Restaurants,-6.27
+Bank of America,2022-06-15,Online store,,Clothing,-4.3
+Bank of America,2022-06-15,Online store,,Food,-0.26
+Ally Savings,2022-06-14,Deposit,,Income,490.25
+Bank of America,2022-06-14,Kroger,,Restaurants,-1.79
+Bank of America,2022-06-14,Kroger,,Food,-1.5
+Bank of America,2022-06-14,Home Depot,,Food,-1.71
+Bank of America,2022-06-14,Kroger,,Entertainment,-1.5
+Bank of America,2022-06-14,Home Depot,,Clothing,-1.71
+Bank of America,2022-06-14,Home Depot,,Medical,-1.71
+Bank of America,2022-06-14,Kroger,,Food,-1.52
+HSBC,2022-06-13,Home Depot,,Entertainment,-14.43
+Capital One Checking,2022-06-13,Kroger,,Restaurants,-64.38
+Bank of America,2022-06-13,Dominion Power,,Power,-100
+Bank of America,2022-06-13,Online store,,General,-4.73
+Bank of America,2022-06-13,Online store,,Entertainment,-2.95
+Bank of America,2022-06-13,Online store,,Restaurants,-3.34
+Bank of America,2022-06-12,Home Depot,,Gift,-0.06
+Bank of America,2022-06-12,Deposit,,Income,539.22
+Bank of America,2022-06-12,Home Depot,,Medical,-0.73
+HSBC,2022-06-11,Movies,,Gift,-78.47
+Capital One Checking,2022-06-11,Online store,,General,-56.12
+Bank of America,2022-06-11,Kroger,,Clothing,-6.45
+Bank of America,2022-06-11,Movies,,Medical,-2.18
+Bank of America,2022-06-11,Online store,,Medical,-15.27
+Bank of America,2022-06-11,Online store,,Food,-15.27
+Bank of America,2022-06-11,Online store,,Clothing,-15.28
+Bank of America,2022-06-10,Online store,,Entertainment,-3.53
+Bank of America,2022-06-10,Movies,,Restaurants,-3.75
+Bank of America,2022-06-10,Online store,,Entertainment,-1.13
+Bank of America,2022-06-10,Online store,,Gift,-1.13
+Bank of America,2022-06-10,Online store,,Clothing,-1.13
+HSBC,2022-06-09,Kroger,,Food,-11.23
+Capital One Checking,2022-06-09,Kroger,,General,-28.38
+Ally Savings,2022-06-09,Publix,,General,-51.2
+Bank of America,2022-06-09,Home Depot,,Medical,-2.9
+Bank of America,2022-06-09,Movies,,General,-3.3
+Bank of America,2022-06-09,Home Depot,,Food,-1.44
+Bank of America,2022-06-08,Deposit,,Income,629.28
+Bank of America,2022-06-08,Home Depot,,Gift,-5.46
+Bank of America,2022-06-08,Online store,,Restaurants,-0.22
+Bank of America,2022-06-08,Online store,,Restaurants,-0.22
+Bank of America,2022-06-08,Online store,,Medical,-0.22
+HSBC,2022-06-07,Kroger,,Gift,-76.73
+Capital One Checking,2022-06-07,Movies,,Clothing,-92.29
+Bank of America,2022-06-07,Publix,,Food,-1
+Bank of America,2022-06-07,Online store,,Gift,-2.12
+Bank of America,2022-06-07,Kroger,,Clothing,-0.61
+Bank of America,2022-06-06,Kroger,,Food,-6.28
+Bank of America,2022-06-06,Kroger,,General,-1.34
+Bank of America,2022-06-06,Movies,,Food,-1.91
+Bank of America,2022-06-06,Movies,,General,-1.91
+Bank of America,2022-06-06,Movies,,Restaurants,-1.91
+HSBC,2022-06-05,Movies,,Gift,-99.49
+Capital One Checking,2022-06-05,Movies,,Restaurants,-1.92
+Bank of America,2022-06-05,Home Depot,,Entertainment,-5.91
+Bank of America,2022-06-05,Movies,,Clothing,-6.7
+Bank of America,2022-06-05,Kroger,,Entertainment,-5.35
+Ally Savings,2022-06-04,Deposit,,Income,134.88
+Bank of America,2022-06-04,Online store,,Gift,-4.78
+Bank of America,2022-06-04,Publix,,Restaurants,-1.8
+Bank of America,2022-06-04,Online store,,Entertainment,-2
+HSBC,2022-06-03,Kroger,,Gift,-47.47
+Capital One Checking,2022-06-03,Movies,,Gift,-17.85
+Bank of America,2022-06-03,Housy House,,Mortgage,-1200
+Bank of America,2022-06-03,Publix,,Clothing,-3.77
+Bank of America,2022-06-03,Kroger,,Restaurants,-5.04
+Bank of America,2022-06-03,Publix,,Food,-1.19
+Bank of America,2022-06-03,Publix,,General,-1.19
+Bank of America,2022-06-03,Publix,,Clothing,-1.2
+House Asset,2022-06-02,Deposit,,Income,400
+Bank of America,2022-06-02,Online store,,Clothing,-2.83
+Bank of America,2022-06-02,Home Depot,,Food,-4.22
+Bank of America,2022-06-02,Publix,,Clothing,-4.24
+Mortgage,2022-06-02,Deposit,,Income,1064.96
+HSBC,2022-06-01,Online store,,Food,-4.24
+Capital One Checking,2022-06-01,Home Depot,,Gift,-8.43
+Bank of America,2022-06-01,Online store,,Entertainment,-3.33
+Bank of America,2022-06-01,Deposit,,Income,693.61
+Bank of America,2022-06-01,Home Depot,,Clothing,-0.15
+Bank of America,2022-06-01,Home Depot,,Clothing,-0.15
+Bank of America,2022-06-01,Home Depot,,Gift,-0.15
+Bank of America,2022-05-31,Kroger,,Food,-2.42
+Bank of America,2022-05-31,Movies,,Entertainment,-5.1
+Bank of America,2022-05-31,Kroger,,Food,-36.65
+HSBC,2022-05-30,Kroger,,Medical,-34.33
+Capital One Checking,2022-05-30,Movies,,Clothing,-18.77
+Ally Savings,2022-05-30,Deposit,,Income,447.56
+Bank of America,2022-05-30,Kroger,,Food,-3.58
+Bank of America,2022-05-30,Online store,,Entertainment,-78.47
+Bank of America,2022-05-30,Publix,,Food,-6.72
+Bank of America,2022-05-29,Online store,,Entertainment,-6.9
+Bank of America,2022-05-29,Movies,,Entertainment,-2.2
+Bank of America,2022-05-29,Kroger,,Gift,-0.01
+Bank of America,2022-05-29,Movies,,Clothing,-2.2
+Bank of America,2022-05-29,Kroger,,Medical,-0.01
+Bank of America,2022-05-29,Movies,,General,-2.22
+Bank of America,2022-05-29,Kroger,,Restaurants,-0.03
+HSBC,2022-05-28,Home Depot,,Medical,-33.77
+Capital One Checking,2022-05-28,Online store,,Entertainment,-53.74
+Bank of America,2022-05-28,Home Depot,,Gift,-3.37
+Bank of America,2022-05-28,Publix,,Gift,-2.86
+Bank of America,2022-05-28,Kroger,,Gift,-5.52
+Bank of America,2022-05-27,Home Depot,,Gift,-0.45
+Bank of America,2022-05-27,Home Depot,,General,-0.5
+Bank of America,2022-05-27,Movies,,General,-0.41
+Bank of America,2022-05-27,Movies,,Entertainment,-0.41
+Bank of America,2022-05-27,Home Depot,,Food,-0.5
+Bank of America,2022-05-27,Home Depot,,Medical,-0.51
+Bank of America,2022-05-27,Movies,,Restaurants,-0.43
+HSBC,2022-05-26,Publix,,Restaurants,-15.53
+Capital One Checking,2022-05-26,Online store,,Entertainment,-22.4
+Bank of America,2022-05-26,Kroger,,Gift,-6.88
+Bank of America,2022-05-26,Publix,,Clothing,-4.39
+Bank of America,2022-05-26,Home Depot,,Medical,-0.72
+Bank of America,2022-05-26,Home Depot,,Food,-0.72
+Bank of America,2022-05-26,Home Depot,,Entertainment,-0.73
+Ally Savings,2022-05-25,Home Depot,,Food,-40.63
+Bank of America,2022-05-25,Home Depot,,Restaurants,-4.95
+Bank of America,2022-05-25,Home Depot,,Entertainment,-5.58
+Bank of America,2022-05-25,Publix,,Clothing,-6.3
+HSBC,2022-05-24,Movies,,General,-24.63
+Capital One Checking,2022-05-24,Publix,,Food,-39.85
+Bank of America,2022-05-24,T-mobile,,Cell,-75
+Bank of America,2022-05-24,Online store,,General,-3.55
+Bank of America,2022-05-24,Deposit,,Income,590.89
+Bank of America,2022-05-24,Movies,,Gift,-0.87
+Bank of America,2022-05-23,Home Depot,,Clothing,-5.32
+Bank of America,2022-05-23,Publix,,Entertainment,-0.06
+Bank of America,2022-05-23,Online store,,Food,-0.37
+Bank of America,2022-05-23,Online store,,Food,-0.37
+Bank of America,2022-05-23,Publix,,Restaurants,-0.06
+Bank of America,2022-05-23,Publix,,Gift,-0.08
+Bank of America,2022-05-23,Online store,,General,-0.38
+HSBC,2022-05-22,Movies,,Entertainment,-70.31
+Capital One Checking,2022-05-22,Movies,,Food,-17.53
+Bank of America,2022-05-22,Kroger,,Medical,-6.12
+Bank of America,2022-05-22,Home Depot,,Entertainment,-0.24
+Bank of America,2022-05-22,Kroger,,Entertainment,-2
+Bank of America,2022-05-22,Home Depot,,Entertainment,-0.24
+Bank of America,2022-05-22,Kroger,,Medical,-2
+Bank of America,2022-05-22,Home Depot,,Restaurants,-0.24
+Bank of America,2022-05-22,Kroger,,Entertainment,-2.01
+Bank of America,2022-05-21,Fast Internet,,Internet,-60
+Bank of America,2022-05-21,Kroger,,Restaurants,-0.43
+Bank of America,2022-05-21,Online store,,Medical,-0.71
+Bank of America,2022-05-21,Kroger,,Gift,-1.54
+Bank of America,2022-05-21,Kroger,,Medical,-1.54
+Bank of America,2022-05-21,Kroger,,General,-1.55
+HSBC,2022-05-20,Home Depot,,Medical,-22.42
+Capital One Checking,2022-05-20,Kroger,,Restaurants,-83.85
+Ally Savings,2022-05-20,Online store,,General,-26.45
+Bank of America,2022-05-20,Online store,,Medical,-0.49
+Bank of America,2022-05-20,Movies,,General,-5.41
+Bank of America,2022-05-20,Online store,,Clothing,-6.7
+Bank of America,2022-05-19,Extra Watery,,Water,-90
+Bank of America,2022-05-19,Publix,,Medical,-2.42
+Bank of America,2022-05-19,Movies,,Restaurants,-3.56
+Bank of America,2022-05-19,Publix,,Entertainment,-6.48
+HSBC,2022-05-18,Online store,,Clothing,-38.07
+Capital One Checking,2022-05-18,Kroger,,Entertainment,-96.53
+Bank of America,2022-05-18,Home Depot,,General,-1.39
+Bank of America,2022-05-18,Movies,,General,-3.66
+Bank of America,2022-05-18,Home Depot,,Clothing,-1.42
+Bank of America,2022-05-17,Publix,,Entertainment,-1.14
+Bank of America,2022-05-17,Publix,,Gift,-3.45
+Bank of America,2022-05-17,Online store,,Gift,-5.74
+HSBC,2022-05-16,Home Depot,,Food,-36.89
+Capital One Checking,2022-05-16,Deposit,,Income,568.59
+Bank of America,2022-05-16,Online store,,Entertainment,-5.63
+Bank of America,2022-05-16,Deposit,,Income,528.31
+Bank of America,2022-05-16,Online store,,Medical,-1.23
+Bank of America,2022-05-16,Online store,,Clothing,-1.23
+Bank of America,2022-05-16,Online store,,Entertainment,-1.25
+Ally Savings,2022-05-15,Deposit,,Income,231.55
+Bank of America,2022-05-15,Deposit,,Income,544.8
+Bank of America,2022-05-15,Online store,,Entertainment,-1.75
+Bank of America,2022-05-15,Home Depot,,Restaurants,-4.11
+HSBC,2022-05-14,Movies,,Restaurants,-12.54
+Capital One Checking,2022-05-14,Online store,,Food,-13.15
+Bank of America,2022-05-14,Publix,,General,-2.63
+Bank of America,2022-05-14,Home Depot,,General,-0.87
+Bank of America,2022-05-14,Home Depot,,Gift,-0.4
+Bank of America,2022-05-14,Home Depot,,General,-0.4
+Bank of America,2022-05-14,Home Depot,,General,-0.41
+Bank of America,2022-05-13,Dominion Power,,Power,-100
+Bank of America,2022-05-13,Kroger,,Medical,-35.14
+Bank of America,2022-05-13,Deposit,,Income,623.45
+Bank of America,2022-05-13,Publix,,General,-1.91
+Roth IRA,2022-05-12,Deposit,,Income,151.52
+HSBC,2022-05-12,Home Depot,,Food,-92.66
+Capital One Checking,2022-05-12,Kroger,,General,-21.72
+Bank of America,2022-05-12,Deposit,,Income,524.93
+Bank of America,2022-05-12,Deposit,,Income,613.65
+Bank of America,2022-05-12,Online store,,General,-1.7
+Bank of America,2022-05-12,Online store,,Gift,-1.7
+Bank of America,2022-05-12,Online store,,General,-1.71
+Bank of America,2022-05-11,Kroger,,Medical,-6.79
+Bank of America,2022-05-11,Movies,,Gift,-0.51
+Bank of America,2022-05-11,Deposit,,Income,192.68
+Bank of America,2022-05-11,Deposit,,Income,192.68
+Bank of America,2022-05-11,Deposit,,Income,192.69
+HSBC,2022-05-10,Online store,,Medical,-29.32
+Capital One Checking,2022-05-10,Home Depot,,Clothing,-28.71
+Ally Savings,2022-05-10,Publix,,Food,-91.18
+Bank of America,2022-05-10,Publix,,General,-60.75
+Bank of America,2022-05-10,Movies,,Restaurants,-1.64
+Bank of America,2022-05-10,Publix,,Gift,-0.63
+Bank of America,2022-05-10,Publix,,Food,-0.63
+Bank of America,2022-05-10,Publix,,Gift,-0.65
+Bank of America,2022-05-09,Movies,,General,-3.18
+Bank of America,2022-05-09,Publix,,General,-4.55
+Bank of America,2022-05-09,Online store,,Entertainment,-5.38
+HSBC,2022-05-08,Online store,,Medical,-11.28
+Capital One Checking,2022-05-08,Publix,,Restaurants,-67.95
+Bank of America,2022-05-08,Kroger,,Entertainment,-42.86
+Bank of America,2022-05-08,Movies,,Gift,-1.59
+Bank of America,2022-05-08,Online store,,Medical,-2.25
+Bank of America,2022-05-08,Online store,,Medical,-2.25
+Bank of America,2022-05-08,Online store,,General,-2.26
+Bank of America,2022-05-07,Home Depot,,Gift,-5.47
+Bank of America,2022-05-07,Publix,,Clothing,-3.36
+Bank of America,2022-05-07,Publix,,Gift,-0.85
+Bank of America,2022-05-07,Publix,,Restaurants,-0.85
+Bank of America,2022-05-07,Publix,,General,-0.85
+HSBC,2022-05-06,Publix,,Gift,-28.05
+Capital One Checking,2022-05-06,Online store,,Medical,-33.11
+Bank of America,2022-05-06,Home Depot,,Restaurants,-1.39
+Bank of America,2022-05-06,Publix,,Medical,-6.65
+Bank of America,2022-05-06,Kroger,,Entertainment,-17.08
+Bank of America,2022-05-06,Kroger,,Clothing,-17.08
+Bank of America,2022-05-06,Kroger,,Entertainment,-17.08
+Ally Savings,2022-05-05,Publix,,General,-74.42
+Bank of America,2022-05-05,Kroger,,General,-6.59
+Bank of America,2022-05-05,Movies,,Food,-0.65
+Bank of America,2022-05-05,Home Depot,,Gift,-0.68
+HSBC,2022-05-04,Kroger,,Clothing,-4.13
+Capital One Checking,2022-05-04,Movies,,Gift,-99.73
+Bank of America,2022-05-04,Home Depot,,General,-1.78
+Bank of America,2022-05-04,Movies,,Food,-3.91
+Bank of America,2022-05-04,Deposit,,Income,195.3
+Bank of America,2022-05-04,Deposit,,Income,195.3
+Bank of America,2022-05-04,Deposit,,Income,195.31
+Capital One Checking,2022-05-04,Starting Balance,,Starting Balances,1102.92
+Bank of America,2022-05-03,Online store,,General,-1.32
+Bank of America,2022-05-03,Movies,,Food,-6.34
+Bank of America,2022-05-03,Housy House,,Mortgage,-1200
+Bank of America,2022-05-03,Home Depot,,Food,-1.18
+Bank of America,2022-05-03,Home Depot,,Gift,-1.18
+Bank of America,2022-05-03,Home Depot,,Entertainment,-1.19
+Bank of America,2022-05-03,Starting Balance,,Starting Balances,1000
+House Asset,2022-05-02,Deposit,,Income,700
+HSBC,2022-05-02,Kroger,,Clothing,-29.71
+Mortgage,2022-05-02,Deposit,,Income,1064.96
+HSBC,2022-05-02,Starting Balance,,Starting Balances,965.39
+Ally Savings,2022-04-30,Movies,,General,-46.17
+Ally Savings,2022-04-25,Home Depot,,Medical,-89.8
+Ally Savings,2022-04-20,Kroger,,Gift,-20.14
+Ally Savings,2022-04-15,Kroger,,Restaurants,-54.77
+Roth IRA,2022-04-14,Deposit,,Income,197.69
+Ally Savings,2022-04-10,Deposit,,Income,105.67
+Ally Savings,2022-04-05,Publix,,Food,-72.56
+Roth IRA,2022-04-03,Deposit,,Income,148.01
+House Asset,2022-04-02,Deposit,,Income,400
+Mortgage,2022-04-02,Deposit,,Income,1064.96
+Ally Savings,2022-03-31,Publix,,Food,-79.08
+Ally Savings,2022-03-26,Kroger,,Medical,-27.14
+Ally Savings,2022-03-21,Movies,,Entertainment,-99.35
+Ally Savings,2022-03-16,Publix,,Gift,-71.25
+Vanguard 401k,2022-03-14,Deposit,,Income,175.6
+Ally Savings,2022-03-11,Movies,,Food,-70.03
+Ally Savings,2022-03-06,Publix,,Food,-76.88
+House Asset,2022-03-02,Starting Balance,,Starting Balances,350200
+Mortgage,2022-03-02,Deposit,,Income,1064.96
+Ally Savings,2022-03-01,Deposit,,Income,513.53
+Roth IRA,2022-02-25,Deposit,,Income,155.14
+Ally Savings,2022-02-24,Home Depot,,Food,-96.17
+Ally Savings,2022-02-24,Starting Balance,,Starting Balances,300
+Vanguard 401k,2022-02-16,Deposit,,Income,168.67
+Vanguard 401k,2022-02-05,Deposit,,Income,164.83
+Mortgage,2022-02-02,Deposit,,Income,1064.96
+Vanguard 401k,2022-01-12,Deposit,,Income,144.06
+Roth IRA,2022-01-05,Deposit,,Income,180.83
+Mortgage,2022-01-02,Deposit,,Income,1064.96
+Vanguard 401k,2022-01-01,Deposit,,Income,123.78
+Vanguard 401k,2021-12-20,Deposit,,Income,125.2
+Vanguard 401k,2021-12-19,Deposit,,Income,182.39
+Vanguard 401k,2021-12-15,Deposit,,Income,125.08
+Roth IRA,2021-12-02,Deposit,,Income,124.06
+Vanguard 401k,2021-12-02,Deposit,,Income,151.68
+Vanguard 401k,2021-12-02,Deposit,,Income,152.95
+Mortgage,2021-12-02,Deposit,,Income,1064.96
+Vanguard 401k,2021-11-26,Deposit,,Income,170.48
+Vanguard 401k,2021-11-25,Deposit,,Income,114.3
+Vanguard 401k,2021-11-24,Deposit,,Income,173.23
+Roth IRA,2021-11-19,Deposit,,Income,198.41
+Vanguard 401k,2021-11-05,Deposit,,Income,197.92
+Mortgage,2021-11-02,Deposit,,Income,1064.96
+Vanguard 401k,2021-10-30,Deposit,,Income,136.57
+Roth IRA,2021-10-29,Deposit,,Income,156.77
+Vanguard 401k,2021-10-27,Deposit,,Income,106.89
+Roth IRA,2021-10-18,Deposit,,Income,190.63
+Roth IRA,2021-10-13,Deposit,,Income,154.17
+Roth IRA,2021-10-07,Deposit,,Income,114.98
+Vanguard 401k,2021-10-07,Deposit,,Income,131.34
+Mortgage,2021-10-02,Starting Balance,,Starting Balances,-331800
+Roth IRA,2021-09-30,Deposit,,Income,117.79
+Vanguard 401k,2021-09-20,Deposit,,Income,182.16
+Roth IRA,2021-09-04,Deposit,,Income,194.88
+Vanguard 401k,2021-08-30,Deposit,,Income,165.9
+Vanguard 401k,2021-08-08,Deposit,,Income,111.37
+Roth IRA,2021-07-23,Deposit,,Income,135.78
+Roth IRA,2021-07-12,Deposit,,Income,101.9
+Vanguard 401k,2021-07-09,Deposit,,Income,182.15
+Roth IRA,2021-07-05,Deposit,,Income,160.62
+Roth IRA,2021-07-05,Starting Balance,,Starting Balances,185.25
+Vanguard 401k,2021-06-25,Deposit,,Income,152.82
+Vanguard 401k,2021-06-25,Starting Balance,,Starting Balances,157.15
