@@ -93,7 +93,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # Create entries
         # Create transaction entries
         entries = []
-        for index, (key, value) in enumerate(groupby(transactions, key = transactions_grouper)):
+        for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
             if key[2] != "Transfer":
                 meta = data.new_metadata(f.name, index)
 
@@ -122,7 +122,6 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 )
 
                 entries.append(txn)
-
 
         # Create transfer entries
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
