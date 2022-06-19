@@ -15,16 +15,36 @@ import re
 import collections
 from itertools import groupby
 from operator import itemgetter
-# Credits to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
-class CSVImporter(importer.ImporterProtocol):
-    def identify(self, f):
-        return re.match("b_.*\.csv", os.path.basename(f.name))
+CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
+BEAN_DATA_DIR = "/bean/data"
+ACCOUNT_MAP = "account_map.csv"
+
+class ActualBudgetImporter(importer.ImporterProtocol):
+    def __init__(self, currency='AUD', file_encoding='utf-8'):
+        self.currency = currency
+        self.file_encoding = file_encoding
+
+    def identify(self, file_):
+        with open(file_.name, encoding=self.file_encoding) as f:
+            header = f.readline().strip()
+        
+        return re.match(header, CSV_HEADER)
+
+    def get_account_map(self):
+        # Get account mapping for Budget accounts --> Ledger accounts
+        
+        found_csv = os.path.exists(ACCOUNT_MAP)
+        csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
+        with open(csv_path + ACCOUNT_MAP) as f:
+            reader = csv.reader(f)
+            account_map = {rows[0]:rows[1] for rows in reader}
+        return account_map
 
     def extract(self, f):
         entries = []
 
-        account_map = CSVImporter.get_account_map()
+        account_map = self.get_account_map()
 
         with open(f.name, mode='r') as f:
             rows = []
@@ -121,11 +141,3 @@ class CSVImporter(importer.ImporterProtocol):
 
 
         return entries
-
-    @staticmethod
-    def get_account_map():
-        with open("/bean/data/account_map.csv") as f:
-            reader = csv.reader(f)
-            account_map = {rows[0]:rows[1] for rows in reader}
-            return account_map
-                

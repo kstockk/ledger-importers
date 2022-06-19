@@ -8,5 +8,5 @@ from importers import custom_csv, budget
 
 CONFIG = [
      custom_csv.CSVImporter(),
-     budget.CSVImporter()
+     budget.ActualBudgetImporter()
 ]
