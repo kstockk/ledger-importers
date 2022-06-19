@@ -33,55 +33,67 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
     def get_account_map(self):
         # Get account mapping for Budget accounts --> Ledger accounts
-        
-        found_csv = os.path.exists(ACCOUNT_MAP)
-        csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
-        with open(csv_path + ACCOUNT_MAP) as f:
-            reader = csv.reader(f)
-            account_map = {rows[0]:rows[1] for rows in reader}
-        return account_map
+        # CSV should only contain two columns "Ledger Account, Budget Account"
+        # 2nd Column (Budget Acount) will be the key
+        try:
+            found_csv = os.path.exists(ACCOUNT_MAP)
+            csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
+            with open(csv_path + ACCOUNT_MAP) as f:
+                reader = csv.reader(f)
+                account_map = {rows[1]:rows[0] for rows in reader}
+            return account_map
+        except:
+            return False
 
     def extract(self, f):
-        entries = []
-
-        account_map = self.get_account_map()
-
+        # Store csv rows in dict
         with open(f.name, mode='r') as f:
             rows = []
             reader = csv.DictReader(f)
             for row in reader:
                 rows.append(row)
 
-        # Blank categories are assumed to be transfers
-        transfers = []
-        for idx, row in enumerate(rows):
-            if not row['Category']:
-                row['Notes'] = row['Payee']
-                row['Payee'] = "Transfer"
-            
+        # Get account mapping details
+        account_map = self.get_account_map()
+
+        # Clean up data
+        for index, row in enumerate(rows):
+            # Change accounts based on account mapping details
+            if account_map and row["Account"]:
+                row["Account"] = account_map[row["Account"]]
+
+            if account_map and row["Category"]:    
+                row["Category"] = account_map[row["Category"]]
+
+            # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))
 
+            # Parse notes for tags
             parse_notes = row["Notes"].split(" #", 1)
             row["Notes"] = parse_notes[0]
             row["Tags"] = ""
-
             if len(parse_notes) > 1:
                 tags = parse_notes[1]
                 row["Tags"] = tags.replace("#", "").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
-            # Search and replace account and category according to the account map
-            for ledger, budget in account_map.items():
-                if row["Account"] == budget and row["Account"]:
-                    row["Account"] = ledger
-                if row["Category"] == budget and row["Category"]:
-                    row["Category"] = ledger
+            # Rows with no category are assumed to be transfers
+            # Create seperate lists for non_transfers and transfers            
+            if not row['Category']:
+                row['Notes'] = row['Payee']
+                row['Payee'] = "Transfer"
 
-        # Group rows for postings
-        grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
-        rows = sorted(rows, key = grouper)
+        # Group rows for postings if the specified columns match
+        transactions_grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
+        transactions = sorted(rows, key = transactions_grouper)
 
-        for index, (key, value) in enumerate(groupby(rows, key = grouper)):
+        transger_grouper = itemgetter("Date", "Payee", "Abs")
+        transfers = sorted(rows, key = transger_grouper)
+
+        # Create entries
+        # Create transaction entries
+        entries = []
+        for index, (key, value) in enumerate(groupby(transactions, key = transactions_grouper)):
             if key[2] != "Transfer":
                 meta = data.new_metadata(f.name, index)
 
@@ -97,25 +109,23 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 )
 
                 total = 0
-                for t in value:
+                for value in values:
                     txn.postings.append(
-                        data.Posting(t["Category"], amount.Amount(D(t["Amount"])*-1,
+                        data.Posting(value["Category"], amount.Amount(D(value["Amount"])*-1,
                             "AUD"), None, None, None, None)
                     )
-
-                    total += D(t["Amount"])
+                    total += D(value["Amount"])
 
                 txn.postings.insert(0,
                     data.Posting(key[1], amount.Amount(total,
-                        "AUD"), None, None, None, None)
+                        self.currency), None, None, None, None)
                 )
 
                 entries.append(txn)
 
-        grouper = itemgetter("Date", "Payee", "Abs")
-        transfers = sorted(rows, key = grouper)
 
-        for index, (key, value) in enumerate(groupby(transfers, key = grouper)):
+        # Create transfer entries
+        for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
             if key[1] == "Transfer":
                 meta = data.new_metadata(f.name, index)
 
@@ -130,14 +140,13 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     postings=[],
                 )
 
-                for t in value:
-                    position = 0 if D(t["Amount"]) < 0 else 1
+                for value in values:
+                    position = 0 if D(value["Amount"]) < 0 else 1
                     txn.postings.insert(position,
-                        data.Posting(t["Account"], amount.Amount(D(t["Amount"]),
-                            "AUD"), None, None, None, None)
+                        data.Posting(value["Account"], amount.Amount(D(value["Amount"]),
+                            self.currency), None, None, None, None)
                     )
 
                 entries.append(txn)
-
 
         return entries
