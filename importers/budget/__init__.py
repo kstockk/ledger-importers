@@ -5,14 +5,10 @@ from beancount.core import amount
 from beancount.core import flags
 from beancount.core import data
 
-from datetime import date
-from dateutil.parser import parse
-
-from decimal import Decimal
 import csv
 import os
 import re
-import collections
+from dateutil.parser import parse
 from itertools import groupby
 from operator import itemgetter
 
