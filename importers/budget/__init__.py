@@ -137,13 +137,26 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     postings=[],
                 )
 
+                total = 0
                 for value in values:
                     position = 0 if D(value["Amount"]) < 0 else 1
                     txn.postings.insert(position,
                         data.Posting(value["Account"], amount.Amount(D(value["Amount"]),
                             self.currency), None, None, None, None)
                     )
+                    total += D(value["Amount"])
+                    to_account = value["Notes"]
 
+                # Complete transfer journal using the account specified in the Notes if journal doesn't add up to 0
+                # This will happen if you only export for a single account instead of all accounts
+                x = 1 if total < 0 else 0
+                if total != D(0):
+                    if account_map and to_account in account_map:
+                        to_account = account_map[to_account]
+                    txn.postings.insert(x,
+                        data.Posting(to_account, amount.Amount(-total,
+                            self.currency), None, None, None, None)
+                    )
                 entries.append(txn)
 
         return entries
