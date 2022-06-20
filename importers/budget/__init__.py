@@ -41,20 +41,20 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         except:
             return False
 
-    def get_ledger_account(self, acc):
+    def get_ledger_account(self, account):
         try:
             account_map = self.get_account_map()
-            return account_map[acc]["Ledger Account"]
+            return account_map[account]["Ledger Account"]
         except KeyError:
-            return acc
+            return account
 
-    def get_off_budget(self):
-        account_map = self.get_account_map()
-        off_budget = []
-        for i in account_map.keys():
-            if account_map[i]["Off-Budget"] == "Y":
-                off_budget.append(i)
-        return off_budget
+    def is_off_budget(self, account):
+        try:
+            account_map = self.get_account_map()
+            if account_map[account]["Off-Budget"] == "Y":
+                return True
+        except KeyError:
+            return False
 
     def extract(self, f):
         # Store csv rows in dict
@@ -63,11 +63,6 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             reader = csv.DictReader(f)
             for row in reader:
                 rows.append(row)
-
-        # Get account mapping details
-        account_map = self.get_account_map()
-
-        off_budget = self.get_off_budget()
 
         # Clean up data
         for index, row in enumerate(rows):
@@ -89,13 +84,13 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
             # Rows with no category are assumed to be transfers
             # Create seperate lists for non_transfers and transfers            
-            if not row['Category'] and row["Account"] not in off_budget:
+            if not row['Category'] and not self.is_off_budget(row["Account"]):
                 row['Notes'] = self.get_ledger_account(row['Payee'])
                 row['Payee'] = "Transfer"
 
             # If payee is an Off-Budget account then assume it is a transfer
             # Replace the Notes will the Payee
-            if row["Payee"] in off_budget:
+            if self.is_off_budget(row["Payee"]):
                 row['Notes'] = self.get_ledger_account(row["Payee"])
                 row["Payee"] = "Transfer"
 
