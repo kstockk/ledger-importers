@@ -67,8 +67,8 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             row["Abs"] = abs(D(row["Amount"]))
 
             # Parse notes for tags
-            parse_notes = row["Notes"].split(" #", 1)
-            row["Notes"] = parse_notes[0]
+            parse_notes = row["Notes"].split("#", 1)
+            row["Notes"] = parse_notes[0].strip()
             row["Tags"] = ""
             if len(parse_notes) > 1:
                 tags = parse_notes[1]
