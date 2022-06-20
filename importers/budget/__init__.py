@@ -14,7 +14,7 @@ from operator import itemgetter
 
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
 BEAN_DATA_DIR = "/bean/data"
-ACCOUNT_MAP = "account_map2.csv"
+ACCOUNT_MAP = "account_map.csv"
 
 class ActualBudgetImporter(importer.ImporterProtocol):
     def __init__(self, currency='AUD', file_encoding='utf-8'):
