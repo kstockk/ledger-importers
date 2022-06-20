@@ -41,6 +41,17 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         except:
             return False
 
+    def get_ledger_map(self, acc):
+        account_map = self.get_account_map()
+        return account_map[acc]["Ledger Account"]
+
+    def get_off_budget(self, account_map):
+        off_budget = []
+        for i in account_map.keys():
+            if account_map[i]["Off-Budget"] == "Y":
+                off_budget.append(i)
+        return off_budget
+
     def extract(self, f):
         # Store csv rows in dict
         with open(f.name, mode='r') as f:
@@ -51,6 +62,8 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
         # Get account mapping details
         account_map = self.get_account_map()
+        if account_map:
+            off_budget = self.get_off_budget(account_map)
 
         # Clean up data
         for index, row in enumerate(rows):
@@ -77,9 +90,15 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
             # Rows with no category are assumed to be transfers
             # Create seperate lists for non_transfers and transfers            
-            if not row['Category']:
+            if not row['Category'] and row["Account"] not in off_budget:
                 row['Notes'] = row['Payee']
                 row['Payee'] = "Transfer"
+
+            # If payee is an Off-Budget account then assume it is a transfer
+            # Replace the Notes will the Payee
+            if row["Payee"] in off_budget:
+                row['Notes'] = self.get_ledger_map(row["Payee"])
+                row["Payee"] = "Transfer"
 
         # Group rows for postings if the specified columns match
         transactions_grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
@@ -130,8 +149,8 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     meta=meta,
                     date=parse(key[0]).date(),
                     flag=flags.FLAG_OKAY,
-                    payee=key[1],
-                    narration="",
+                    payee=None,
+                    narration=key[1],
                     tags=set(),
                     links=set(),
                     postings=[],
