@@ -41,11 +41,15 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         except:
             return False
 
-    def get_ledger_map(self, acc):
-        account_map = self.get_account_map()
-        return account_map[acc]["Ledger Account"]
+    def get_ledger_account(self, acc):
+        try:
+            account_map = self.get_account_map()
+            return account_map[acc]["Ledger Account"]
+        except KeyError:
+            return acc
 
-    def get_off_budget(self, account_map):
+    def get_off_budget(self):
+        account_map = self.get_account_map()
         off_budget = []
         for i in account_map.keys():
             if account_map[i]["Off-Budget"] == "Y":
@@ -62,19 +66,14 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
         # Get account mapping details
         account_map = self.get_account_map()
-        if account_map:
-            off_budget = self.get_off_budget(account_map)
+
+        off_budget = self.get_off_budget()
 
         # Clean up data
         for index, row in enumerate(rows):
             # Change accounts based on account mapping details
-            if account_map and row["Account"]:
-                if row["Account"] in account_map:
-                    row["Account"] = account_map[row["Account"]]["Ledger Account"]
-
-            if account_map and row["Category"]:
-                if row["Category"] in account_map:    
-                    row["Category"] = account_map[row["Category"]]["Ledger Account"]
+            row["Account"] = self.get_ledger_account(row["Account"])
+            row["Category"] = self.get_ledger_account(row["Category"])
 
             # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))
@@ -91,13 +90,13 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             # Rows with no category are assumed to be transfers
             # Create seperate lists for non_transfers and transfers            
             if not row['Category'] and row["Account"] not in off_budget:
-                row['Notes'] = row['Payee']
+                row['Notes'] = self.get_ledger_account(row['Payee'])
                 row['Payee'] = "Transfer"
 
             # If payee is an Off-Budget account then assume it is a transfer
             # Replace the Notes will the Payee
             if row["Payee"] in off_budget:
-                row['Notes'] = self.get_ledger_map(row["Payee"])
+                row['Notes'] = self.get_ledger_account(row["Payee"])
                 row["Payee"] = "Transfer"
 
         # Group rows for postings if the specified columns match
@@ -170,8 +169,6 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 # This will happen if you only export for a single account instead of all accounts
                 x = 1 if total < 0 else 0
                 if total != D(0):
-                    if account_map and to_account in account_map:
-                        to_account = account_map[to_account]["Ledger Account"]
                     txn.postings.insert(x,
                         data.Posting(to_account, amount.Amount(-total,
                             self.currency), None, None, None, None)
