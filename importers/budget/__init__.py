@@ -14,7 +14,7 @@ from operator import itemgetter
 
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
 BEAN_DATA_DIR = "/bean/data"
-ACCOUNT_MAP = "account_map.csv"
+ACCOUNT_MAP = "account_map2.csv"
 
 class ActualBudgetImporter(importer.ImporterProtocol):
     def __init__(self, currency='AUD', file_encoding='utf-8'):
@@ -29,14 +29,14 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
     def get_account_map(self):
         # Get account mapping for Budget accounts --> Ledger accounts
-        # CSV should only contain two columns "Ledger Account, Budget Account"
-        # 2nd Column (Budget Acount) will be the key
+        # CSV should contain three columns "Budget Account, Ledger Account, Off-Budget"
+        # 1nd Column (Budget Acount) will be the key
         try:
             found_csv = os.path.exists(ACCOUNT_MAP)
             csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
             with open(csv_path + ACCOUNT_MAP) as f:
                 reader = csv.reader(f)
-                account_map = {rows[1]:rows[0] for rows in reader}
+                account_map = {rows[0]:{'Ledger Account': rows[1], 'Off-Budget': rows[2]} for rows in reader}
             return account_map
         except:
             return False
@@ -57,11 +57,11 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             # Change accounts based on account mapping details
             if account_map and row["Account"]:
                 if row["Account"] in account_map:
-                    row["Account"] = account_map[row["Account"]]
+                    row["Account"] = account_map[row["Account"]]["Ledger Account"]
 
             if account_map and row["Category"]:
                 if row["Category"] in account_map:    
-                    row["Category"] = account_map[row["Category"]]
+                    row["Category"] = account_map[row["Category"]]["Ledger Account"]
 
             # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))
@@ -152,11 +152,12 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 x = 1 if total < 0 else 0
                 if total != D(0):
                     if account_map and to_account in account_map:
-                        to_account = account_map[to_account]
+                        to_account = account_map[to_account]["Ledger Account"]
                     txn.postings.insert(x,
                         data.Posting(to_account, amount.Amount(-total,
                             self.currency), None, None, None, None)
                     )
+
                 entries.append(txn)
 
         return entries
