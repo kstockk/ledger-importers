@@ -82,6 +82,12 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tags.replace("#", "").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
+            # If payee is a Starting Balance
+            # Need this as off-budget accounts will not have a category
+            # Need step is to assume no category is a transfer
+            if row["Payee"] == "Starting Balance":
+                row["Category"] = "Starting Balance"
+
             # Rows with no category are assumed to be transfers
             # Create seperate lists for non_transfers and transfers            
             if not row['Category'] and not self.is_off_budget(row["Account"]):
@@ -98,14 +104,11 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         transactions_grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
         transactions = sorted(rows, key = transactions_grouper)
 
-        transger_grouper = itemgetter("Date", "Payee", "Abs")
-        transfers = sorted(rows, key = transger_grouper)
-
         # Create entries
         # Create transaction entries
         entries = []
         for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
-            if key[2] != "Transfer":
+            if not key[2] in ["Transfer", "Starting Balance"]:
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
@@ -134,8 +137,26 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
                 entries.append(txn)
 
+        transger_grouper = itemgetter("Date", "Payee", "Abs")
+        transfers = sorted(rows, key = transger_grouper)
+
         # Create transfer entries
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
+            if key[1] == "Starting Balance":
+                meta = data.new_metadata(f.name, index)
+
+                for value in values:
+                    txn = data.Balance(
+                        meta=meta,
+                        date=parse(value["Date"]).date(),
+                        account=value["Account"],
+                        amount=amount.Amount(D(value["Amount"]), self.currency),
+                        tolerance=None,
+                        diff_amount=None
+                    )
+
+                entries.append(txn)
+            
             if key[1] == "Transfer":
                 meta = data.new_metadata(f.name, index)
 
