@@ -142,20 +142,20 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
         # Create transfer entries
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
-            if key[1] == "Starting Balance":
-                meta = data.new_metadata(f.name, index)
+            # if key[1] == "Starting Balance":
+            #     meta = data.new_metadata(f.name, index)
 
-                for value in values:
-                    txn = data.Balance(
-                        meta=meta,
-                        date=parse(value["Date"]).date(),
-                        account=value["Account"],
-                        amount=amount.Amount(D(value["Amount"]), self.currency),
-                        tolerance=None,
-                        diff_amount=None
-                    )
+            #     for value in values:
+            #         txn = data.Balance(
+            #             meta=meta,
+            #             date=parse(value["Date"]).date(),
+            #             account=value["Account"],
+            #             amount=amount.Amount(D(value["Amount"]), self.currency),
+            #             tolerance=None,
+            #             diff_amount=None
+            #         )
 
-                entries.append(txn)
+            #     entries.append(txn)
             
             if key[1] == "Transfer":
                 meta = data.new_metadata(f.name, index)
