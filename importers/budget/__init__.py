@@ -99,10 +99,6 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tags.replace("#", "").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
-            # If payee is a Starting Balance
-            if row["Payee"] == "Starting Balance":
-                row['Transfer'] = True
-
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
             if self.is_bs_account(row['Payee']) and not row['Category']:
                 if not row['Notes']:
@@ -125,7 +121,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         entries = []
         for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
 
-            if not key[1]:
+            if not key[1] and not key[3] == "Starting Balance":
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
@@ -154,13 +150,13 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
                 entries.append(txn)
 
-        transger_grouper = itemgetter("Date", "Transfer", "Payee", "Abs")
+        transger_grouper = itemgetter("Date", "Transfer", "Abs")
         transfers = sorted(rows, key = transger_grouper)
 
         # Create transfer entries
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
 
-            if key[1] and key[2] != "Starting Balance":
+            if key[1]:
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
