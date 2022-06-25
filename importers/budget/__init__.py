@@ -109,6 +109,9 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     row['Category'] = self.get_ledger_account(row["Payee"])
                     row['Payee'] = ""
 
+            if not row['Category']:
+                row['Category'] = self.get_ledger_account("No Category")
+
         # Group rows for postings if the specified columns match
         transactions_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags")
         transactions = sorted(rows, key = transactions_grouper)
