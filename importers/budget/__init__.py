@@ -56,6 +56,16 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         except KeyError:
             return False
 
+    def is_bs_account(self, account):
+        try:
+            account_map = self.get_account_map()
+            ledger_account = account_map[account]["Ledger Account"]
+            account_type = ledger_account.split(":")[0]
+            if account_type in ("Assets","Liabilities"):
+                return True
+        except KeyError:
+            return False        
+
     def extract(self, f):
         # Store csv rows in dict
         with open(f.name, mode='r') as f:
@@ -73,6 +83,9 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))
 
+            # Create is_transfer key
+            row['Transfer'] = False
+
             # Parse notes for tags
             parse_notes = row["Notes"].split("#", 1)
             row["Notes"] = parse_notes[0].strip()
@@ -83,41 +96,38 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
             # If payee is a Starting Balance
-            # Need this as off-budget accounts will not have a category
-            # Need step is to assume no category is a transfer
             if row["Payee"] == "Starting Balance":
-                row["Category"] = "Starting Balance"
+                row['Transfer'] = True
 
-            # Rows with no category are assumed to be transfers
-            # Create seperate lists for non_transfers and transfers            
-            if not row['Category'] and not self.is_off_budget(row["Account"]):
-                row['Notes'] = self.get_ledger_account(row['Payee'])
-                row['Payee'] = "Transfer"
+            # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
+            if self.is_bs_account(row['Payee']) and not row['Category']:
+                if not row['Notes']:
+                    row['Transfer'] = True
+                    row["Payee"] = self.get_ledger_account(row["Payee"])
 
-            # If payee is an Off-Budget account then assume it is a transfer
-            # Replace the Notes will the Payee
-            if self.is_off_budget(row["Payee"]):
-                row['Notes'] = self.get_ledger_account(row["Payee"])
-                row["Payee"] = "Transfer"
+                if row['Notes']:
+                    row['Category'] = self.get_ledger_account(row["Payee"])
+                    row['Payee'] = ""
 
         # Group rows for postings if the specified columns match
-        transactions_grouper = itemgetter("Date", "Account", "Payee", "Notes", "Tags")
+        transactions_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags")
         transactions = sorted(rows, key = transactions_grouper)
 
         # Create entries
         # Create transaction entries
         entries = []
         for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
-            if not key[2] in ["Transfer", "Starting Balance"]:
+
+            if not key[1]:
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
                     meta=meta,
                     date=parse(key[0]).date(),
                     flag=flags.FLAG_OKAY,
-                    payee=key[2],
-                    narration=key[3],
-                    tags=set(filter(None, key[4])),
+                    payee=key[3],
+                    narration=key[4],
+                    tags=set(filter(None, key[5])),
                     links=set(),
                     postings=[],
                 )
@@ -131,33 +141,19 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     total += D(value["Amount"])
 
                 txn.postings.insert(0,
-                    data.Posting(key[1], amount.Amount(total,
+                    data.Posting(key[2], amount.Amount(total,
                         self.currency), None, None, None, None)
                 )
 
                 entries.append(txn)
 
-        transger_grouper = itemgetter("Date", "Payee", "Abs")
+        transger_grouper = itemgetter("Date", "Transfer", "Payee", "Abs")
         transfers = sorted(rows, key = transger_grouper)
 
         # Create transfer entries
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
-            # if key[1] == "Starting Balance":
-            #     meta = data.new_metadata(f.name, index)
 
-            #     for value in values:
-            #         txn = data.Balance(
-            #             meta=meta,
-            #             date=parse(value["Date"]).date(),
-            #             account=value["Account"],
-            #             amount=amount.Amount(D(value["Amount"]), self.currency),
-            #             tolerance=None,
-            #             diff_amount=None
-            #         )
-
-            #     entries.append(txn)
-            
-            if key[1] == "Transfer":
+            if key[1] and key[2] != "Starting Balance":
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
@@ -165,7 +161,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     date=parse(key[0]).date(),
                     flag=flags.FLAG_OKAY,
                     payee=None,
-                    narration=key[1],
+                    narration="Transfer",
                     tags=set(),
                     links=set(),
                     postings=[],
@@ -179,7 +175,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                             self.currency), None, None, None, None)
                     )
                     total += D(value["Amount"])
-                    to_account = value["Notes"]
+                    to_account = value["Payee"]
 
                 # Complete transfer journal using the account specified in the Notes if journal doesn't add up to 0
                 # This will happen if you only export for a single account instead of all accounts
