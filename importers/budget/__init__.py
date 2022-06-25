@@ -44,27 +44,31 @@ class ActualBudgetImporter(importer.ImporterProtocol):
     def get_ledger_account(self, account):
         try:
             account_map = self.get_account_map()
-            return account_map[account]["Ledger Account"]
+            return account_map[account]["Ledger Account"] if account_map else account
         except KeyError:
             return account
 
     def is_off_budget(self, account):
         try:
-            account_map = self.get_account_map()
-            if account_map[account]["Off-Budget"] == "Y":
-                return True
+            if account_map:
+                account_map = self.get_account_map()
+                if account_map[account]["Off-Budget"] == "Y":
+                    return True
+            return account
         except KeyError:
             return False
 
     def is_bs_account(self, account):
         try:
             account_map = self.get_account_map()
-            ledger_account = account_map[account]["Ledger Account"]
-            account_type = ledger_account.split(":")[0]
-            if account_type in ("Assets","Liabilities"):
-                return True
+            if account_map:
+                ledger_account = account_map[account]["Ledger Account"]
+                account_type = ledger_account.split(":")[0]
+                if account_type in ("Assets","Liabilities"):
+                    return True
+            return account
         except KeyError:
-            return False        
+            return False
 
     def extract(self, f):
         # Store csv rows in dict
