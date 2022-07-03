@@ -180,12 +180,12 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # TRANSFERS
         #
 
-        tfr_grouper = itemgetter("Date", "Transfer", "Abs")
+        tfr_grouper = itemgetter("Date", "Transfer", "Abs", "Exclude")
         tfr_sort = sorted(rows, key = tfr_grouper)
         tfr_list = [
             {key: list(values)} 
             for key, values in groupby(tfr_sort, key = tfr_grouper) 
-            if key[1]
+            if key[1] and not key[3]
             ]
 
         # Create transfer entries
