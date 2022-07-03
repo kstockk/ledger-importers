@@ -122,7 +122,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row['Category'] = self.get_ledger_account(account_map, "No Category")
 
             # Exclude if Payee = Starting Balance or account is an Off-budget account
-            if row['Payee'] == "Starting Balances" or row["Account"] in off_budget_accounts:
+            if row['Payee'] == "Starting Balance" or row["Account"] in off_budget_accounts:
                 row['Exclude'] = True
 
         #
