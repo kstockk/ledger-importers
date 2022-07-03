@@ -113,24 +113,33 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row['Category'] = self.get_ledger_account("No Category")
 
         # Group rows for postings if the specified columns match
-        transactions_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags")
-        transactions = sorted(rows, key = transactions_grouper)
+        trans_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags")
+        trans_sort = sorted(rows, key = trans_grouper)
+        trans_list = [
+            {key: list(values)} 
+            for key, values in groupby(trans_sort, key = trans_grouper) 
+            if not key[1] and key[3] != 'Starting Balance'
+            ]
 
         # Create entries
         # Create transaction entries
         entries = []
-        for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
+        for dict in trans_list:
+            for index, (key, values) in enumerate(dict.items()):
+                parsed_date = parse(key[0], dayfirst = True).date()
+                trans_payee = key[3]
+                trans_narration = key[4]
+                trans_tags = key[5]
 
-            if not key[1] and not key[3] == "Starting Balance":
-                meta = data.new_metadata(f.name, index, {"effective-date": parse(key[0]).date()})
+                meta = data.new_metadata(f.name, index, {"effective-date": parsed_date})
 
                 txn = data.Transaction(
                     meta=meta,
-                    date=parse(key[0]).date(),
+                    date=parsed_date,
                     flag=flags.FLAG_OKAY,
-                    payee=key[3],
-                    narration=key[4],
-                    tags=set(filter(None, key[5])),
+                    payee=trans_payee,
+                    narration=trans_narration,
+                    tags=set(filter(None, trans_tags)),
                     links=set(),
                     postings=[],
                 )
@@ -150,18 +159,24 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
                 entries.append(txn)
 
-        transger_grouper = itemgetter("Date", "Transfer", "Abs")
-        transfers = sorted(rows, key = transger_grouper)
+        tfr_grouper = itemgetter("Date", "Transfer", "Abs")
+        tfr_sort = sorted(rows, key = tfr_grouper)
+        tfr_list = [
+            {key: list(values)} 
+            for key, values in groupby(tfr_sort, key = tfr_grouper) 
+            if key[1]
+            ]
 
         # Create transfer entries
-        for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
+        for dict in tfr_list:
+            for index, (key, values) in enumerate(dict.items()):
+                parsed_date = parse(key[0], dayfirst = True).date()
 
-            if key[1]:
-                meta = data.new_metadata(f.name, index, {"effective-date": parse(key[0]).date()})
+                meta = data.new_metadata(f.name, index, {"effective-date": parsed_date})
 
                 txn = data.Transaction(
                     meta=meta,
-                    date=parse(key[0]).date(),
+                    date=parsed_date,
                     flag=flags.FLAG_OKAY,
                     payee=None,
                     narration="Transfer",
