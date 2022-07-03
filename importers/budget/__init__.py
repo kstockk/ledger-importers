@@ -122,7 +122,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         for index, (key, values) in enumerate(groupby(transactions, key = transactions_grouper)):
 
             if not key[1] and not key[3] == "Starting Balance":
-                meta = data.new_metadata(f.name, index)
+                meta = data.new_metadata(f.name, index, {"effective-date": parse(key[0]).date()})
 
                 txn = data.Transaction(
                     meta=meta,
@@ -157,7 +157,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         for index, (key, values) in enumerate(groupby(transfers, key = transger_grouper)):
 
             if key[1]:
-                meta = data.new_metadata(f.name, index)
+                meta = data.new_metadata(f.name, index, {"effective-date": parse(key[0]).date()})
 
                 txn = data.Transaction(
                     meta=meta,
