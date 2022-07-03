@@ -9,12 +9,13 @@ import csv
 import os
 import re
 from dateutil.parser import parse
-from itertools import groupby
+from itertools import chain, groupby
 from operator import itemgetter
 
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
 BEAN_DATA_DIR = "/bean/data"
 ACCOUNT_MAP = "account_map.csv"
+MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
 class ActualBudgetImporter(importer.ImporterProtocol):
     def __init__(self, currency='AUD', file_encoding='utf-8'):
@@ -35,60 +36,67 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             found_csv = os.path.exists(ACCOUNT_MAP)
             csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
             with open(csv_path + ACCOUNT_MAP) as f:
-                reader = csv.reader(f)
-                account_map = {rows[0]:{'Ledger Account': rows[1], 'Off-Budget': rows[2]} for rows in reader}
+                header = f.readline().strip()
+                if re.match(header, MAP_HEADER):
+                    reader = csv.reader(f)
+                    account_map = {rows[0]: {'Ledger Account': rows[1], 'Off-Budget': rows[2]} for rows in reader}
             return account_map
         except:
             return False
 
-    def get_ledger_account(self, account):
+    def off_budget_accounts(self, account_map):
+        if account_map:
+            off_budget_accounts = [
+                (key, values["Ledger Account"])
+                for key, values in account_map.items()
+                if ("Off-Budget", "Y") in values.items() 
+            ]
+            return list(chain(*off_budget_accounts))
+        return []
+
+    def get_ledger_account(self, account_map, account):
         try:
             account_map = self.get_account_map()
-            return account_map[account]["Ledger Account"] if account_map else account
+            if account_map: 
+                return account_map[account]["Ledger Account"]
+            return account
         except KeyError:
             return account
 
-    def is_off_budget(self, account):
+    def is_bs_account(self, account_map, account):
         try:
-            if account_map:
-                account_map = self.get_account_map()
-                if account_map[account]["Off-Budget"] == "Y":
-                    return True
-            return account
-        except KeyError:
-            return False
-
-    def is_bs_account(self, account):
-        try:
-            account_map = self.get_account_map()
             if account_map:
                 ledger_account = account_map[account]["Ledger Account"]
                 account_type = ledger_account.split(":")[0]
-                if account_type in ("Assets","Liabilities"):
+                if account_type in ("Assets", "Liabilities"):
                     return True
-            return account
+            return False
         except KeyError:
             return False
 
     def extract(self, f):
         # Store csv rows in dict
         with open(f.name, mode='r') as f:
-            rows = []
-            reader = csv.DictReader(f)
-            for row in reader:
-                rows.append(row)
+            rows = [row for row in csv.DictReader(f)]
+
+        # Get account mappings
+        account_map = self.get_account_map()
+        off_budget_accounts = self.off_budget_accounts(account_map)
 
         # Clean up data
         for index, row in enumerate(rows):
             # Change accounts based on account mapping details
-            row["Account"] = self.get_ledger_account(row["Account"])
-            row["Category"] = self.get_ledger_account(row["Category"])
+            row["Account"] = self.get_ledger_account(account_map, row["Account"])
+            row["Category"] = self.get_ledger_account(account_map, row["Category"])
 
             # Create key with absolute values
             row["Abs"] = abs(D(row["Amount"]))
 
+            # Create exclude key
+            row["Exclude"] = False
+
             # Create is_transfer key
-            row['Transfer'] = False
+            row["Transfer"] = False
 
             # Parse notes for tags
             parse_notes = row["Notes"].split("#", 1)
@@ -100,25 +108,34 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
-            if self.is_bs_account(row['Payee']) and not row['Category']:
+            if self.is_bs_account(account_map, row['Payee']) and not row['Category']:
                 if not row['Notes']:
                     row['Transfer'] = True
-                    row["Payee"] = self.get_ledger_account(row["Payee"])
+                    row["Payee"] = self.get_ledger_account(account_map, row["Payee"])
 
                 if row['Notes']:
-                    row['Category'] = self.get_ledger_account(row["Payee"])
+                    row['Category'] = self.get_ledger_account(account_map, row["Payee"])
                     row['Payee'] = ""
 
+            # If no category
             if not row['Category']:
-                row['Category'] = self.get_ledger_account("No Category")
+                row['Category'] = self.get_ledger_account(account_map, "No Category")
+
+            # Exclude if Payee = Starting Balance or account is an Off-budget account
+            if row['Payee'] == "Staring Balance" or row["Account"] in off_budget_accounts:
+                row['Exclude'] = True
+
+        #
+        # NON-TRANSFERS
+        #
 
         # Group rows for postings if the specified columns match
-        trans_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags")
+        trans_grouper = itemgetter("Date", "Transfer", "Account", "Payee", "Notes", "Tags", "Exclude")
         trans_sort = sorted(rows, key = trans_grouper)
         trans_list = [
             {key: list(values)} 
             for key, values in groupby(trans_sort, key = trans_grouper) 
-            if not key[1] and key[3] != 'Starting Balance'
+            if not key[1] and not key[6]
             ]
 
         # Create entries
@@ -158,6 +175,10 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 )
 
                 entries.append(txn)
+
+        # 
+        # TRANSFERS
+        #
 
         tfr_grouper = itemgetter("Date", "Transfer", "Abs")
         tfr_sort = sorted(rows, key = tfr_grouper)
