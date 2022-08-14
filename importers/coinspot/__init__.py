@@ -13,7 +13,7 @@ from dateutil.parser import parse
 from itertools import chain, groupby
 from operator import itemgetter
 
-CSV_HEADER = ["Tansaction Date","Type","Market","Amount","Rate inc. fee","Rate ex. fee","Fee","Fee AUD (inc GST)","GST AUD","Total AUD","Total (inc GST)"]
+CSV_HEADER = ["Transaction Date","Type","Market","Amount","Rate inc. fee","Rate ex. fee","Fee","Fee AUD (inc GST)","GST AUD","Total AUD","Total (inc GST)"]
 
 class CoinSpotImporter(importer.ImporterProtocol):
     def __init__(self, file_encoding='utf-8-sig'):
@@ -32,7 +32,7 @@ class CoinSpotImporter(importer.ImporterProtocol):
         
         with open(file_.name, mode='r', encoding=self.file_encoding) as f:
             for index, row in enumerate(csv.DictReader(f)):
-                parsed_date = parse(row["Tansaction Date"], dayfirst = True).date()
+                parsed_date = parse(row["Transaction Date"], dayfirst = True).date()
                 trans_type = row["Type"]
                 market = row["Market"]
                 amnt = row["Amount"]
