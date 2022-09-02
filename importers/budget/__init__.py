@@ -8,7 +8,8 @@ from beancount.core import data
 import csv
 import os
 import re
-from dateutil.parser import parse
+
+from datetime import datetime
 from itertools import chain, groupby
 from operator import itemgetter
 
@@ -143,7 +144,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         entries = []
         for dict in trans_list:
             for index, (key, values) in enumerate(dict.items()):
-                parsed_date = parse(key[0], dayfirst = True).date()
+                parsed_date = datetime.strptime(key[0], '%d/%m/%Y').date()
                 trans_payee = key[3]
                 trans_narration = key[4]
                 trans_tags = key[5]
@@ -191,8 +192,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # Create transfer entries
         for dict in tfr_list:
             for index, (key, values) in enumerate(dict.items()):
-                parsed_date = parse(key[0], dayfirst = True).date()
-
+                parsed_date = datetime.strptime(key[0], '%d/%m/%Y').date()
                 meta = data.new_metadata(f.name, index, {"effective-date": parsed_date})
 
                 txn = data.Transaction(

@@ -9,7 +9,7 @@ from beancount.core import data
 import csv
 import os
 import re
-from dateutil.parser import parse
+from datetime import datetime
 from itertools import chain, groupby
 from operator import itemgetter
 
@@ -32,7 +32,7 @@ class CoinSpotImporter(importer.ImporterProtocol):
         
         with open(file_.name, mode='r', encoding=self.file_encoding) as f:
             for index, row in enumerate(csv.DictReader(f)):
-                parsed_date = parse(row["Transaction Date"], dayfirst = True).date()
+                parsed_date = datetime.strptime(row["Transaction Date"], '%d/%m/%Y').date()
                 trans_type = row["Type"]
                 market = row["Market"]
                 amnt = row["Amount"]
