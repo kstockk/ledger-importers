@@ -4,10 +4,11 @@ import os, sys
 sys.path.append(os.path.dirname(__file__))
 
 # importers located in the importers directory
-from importers import custom_csv, budget, coinspot
+from importers import custom_csv, budget, coinspot, crypto
 
 CONFIG = [
      custom_csv.CSVImporter(),
      budget.ActualBudgetImporter(),
-     coinspot.CoinSpotImporter()
+     coinspot.CoinSpotImporter(),
+     crypto.CryptoImporter()
 ]
