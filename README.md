@@ -16,3 +16,7 @@ Ensure the following two custome entries are in your master.beancount file
 ```
 bean-extract config.py importers/custom_csv/c_sample.csv 
 ```
+
+## Known Issues
+
+- For the budget importer - Cannot have the same description but one of the leg has a #tag. It doesn't work...
