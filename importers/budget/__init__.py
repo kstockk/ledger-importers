@@ -149,7 +149,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 trans_narration = key[4]
                 trans_tags = key[5]
 
-                meta = data.new_metadata(f.name, index, {"effective-date": parsed_date})
+                meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
                     meta=meta,
@@ -193,7 +193,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         for dict in tfr_list:
             for index, (key, values) in enumerate(dict.items()):
                 parsed_date = datetime.strptime(key[0], '%d/%m/%Y').date()
-                meta = data.new_metadata(f.name, index, {"effective-date": parsed_date})
+                meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
                     meta=meta,
