@@ -119,8 +119,11 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     row['Payee'] = ""
 
             # If no category
-            if not row['Category']:
+            if not row['Category'] and not row['Notes'] == "Interest on Loan":
                 row['Category'] = self.get_ledger_account(account_map, "No Category")
+
+            if not row['Category'] and row['Notes'] == "Interest on Loan":
+                row['Category'] = self.get_ledger_account(account_map, "Bank Loan Interest")
 
             # Exclude if Payee = Starting Balance or account is an Off-budget account
             if row['Payee'] == "Starting Balance" or row["Account"] in off_budget_accounts:
