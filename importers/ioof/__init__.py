@@ -31,7 +31,7 @@ class IOOFImporter(importer.ImporterProtocol):
         try:
             # found_csv = os.path.exists('ioof_transactions_mapping.csv')
             # csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
-            with open('importers/ioof/ioof_transactions_mappings.csv', encoding='utf-8-sig') as f:
+            with open('mappings/ioof_transactions_mappings.csv', encoding='utf-8-sig') as f:
                 header = f.readline().strip()
                 if re.match(header, "trans_type,account_1,account_1_value,account_2,account_2_value,asset_name_2,asset_code_2"):
                     reader = csv.reader(f)
