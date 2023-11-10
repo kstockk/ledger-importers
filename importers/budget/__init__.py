@@ -13,9 +13,11 @@ from datetime import datetime
 from itertools import chain, groupby
 from operator import itemgetter
 
+home_directory = os.path.expanduser( '~' )
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
-BEAN_DATA_DIR = "/bean/data"
-ACCOUNT_MAP = "account_map.csv"
+# BEAN_DATA_DIR = "/bean/data"
+BEAN_DATA_DIR = home_directory + "/Ledger/mappings"
+ACCOUNT_MAP = "actual_budget_mappings.csv"
 MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
 class ActualBudgetImporter(importer.ImporterProtocol):
@@ -34,9 +36,9 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # CSV should contain three columns "Budget Account, Ledger Account, Off-Budget"
         # 1nd Column (Budget Acount) will be the key
         try:
-            # found_csv = os.path.exists(ACCOUNT_MAP)
-            # csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
-            with open('mappings/actual_budget_mappings.csv') as f:
+            found_csv = os.path.exists(ACCOUNT_MAP)
+            csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
+            with open(csv_path + "/" + ACCOUNT_MAP) as f:
                 header = f.readline().strip()
                 if re.match(header, MAP_HEADER):
                     reader = csv.reader(f)
