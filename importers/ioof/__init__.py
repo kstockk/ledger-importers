@@ -79,18 +79,24 @@ class IOOFImporter(importer.ImporterProtocol):
                     postings=[],
                 )
 
-                account_1 = self.get_map(trans_type, 'account_1')
-                account_2 = self.get_map(trans_type, 'account_2')
+                if trans_type != "Buys":
+                    account_1 = self.get_map(trans_type, 'account_1')
+                    account_2 = self.get_map(trans_type, 'account_2')
+                    ttype = trans_type
+                else:
+                    account_1 = self.get_map(desc, 'account_1')
+                    account_2 = self.get_map(desc, 'account_2')    
+                    ttype = desc            
 
                 if not "no account" in account_1 or not "no account" in account_2:
-                    amount_1 = D(amnt) * int(self.get_map(trans_type, 'account_1_value'))
-                    amount_2 = D(amnt) * int(self.get_map(trans_type, 'account_2_value'))
+                    amount_1 = D(amnt) * int(self.get_map(ttype, 'account_1_value'))
+                    amount_2 = D(amnt) * int(self.get_map(ttype, 'account_2_value'))
                 else:
                     amount_1 = D(amnt)
                     amount_2 = D(amnt) * -1
 
-                asset_name = self.get_map(trans_type, 'asset_name_2')
-                asset_code = self.get_map(trans_type, 'asset_code_2')
+                asset_name = self.get_map(ttype, 'asset_name_2')
+                asset_code = self.get_map(ttype, 'asset_code_2')
 
                 cur_2 = 'AUD'
                 cost_2 = None
