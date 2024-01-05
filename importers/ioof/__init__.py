@@ -104,7 +104,7 @@ class IOOFImporter(importer.ImporterProtocol):
                     cost_2 = None
                     price_2 = None
 
-                    if asset_name == desc and trans_type == "Buy":
+                    if asset_name == desc and trans_type == "Buys":
                         amount_2 = D(units)
                         cur_2 = asset_code
                         cost_2 = Cost(D(unit_price), 'AUD', None, None)
