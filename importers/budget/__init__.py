@@ -107,7 +107,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             row["Tags"] = ""
             if len(parse_notes) > 1:
                 tags = parse_notes[1]
-                row["Tags"] = tags.replace("#", "").lower()
+                row["Tags"] = tags.replace(" #", ", ").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
