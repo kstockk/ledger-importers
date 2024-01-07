@@ -110,7 +110,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tags.replace(" #", ", ").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
-            row["Tags"] = ' '.join(row["Tags"])
+            row["Tags"] = ', '.join(row["Tags"])
 
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
             if self.is_bs_account(account_map, row['Payee']) and not row['Category']:
@@ -168,7 +168,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     flag=flags.FLAG_OKAY,
                     payee=trans_payee,
                     narration=trans_narration,
-                    tags=set(filter(None, (trans_tags,))),
+                    tags=set(filter(None, trans_tags.split(", "))),
                     links=set(),
                     postings=[],
                 )
