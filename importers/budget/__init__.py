@@ -14,7 +14,7 @@ from itertools import chain, groupby
 from operator import itemgetter
 
 home_directory = os.path.expanduser( '~' )
-CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount"
+CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount,Cleared"
 # BEAN_DATA_DIR = "/bean/data"
 BEAN_DATA_DIR = home_directory + "/Ledger/mappings"
 ACCOUNT_MAP = "actual_budget_mappings.csv"
@@ -110,6 +110,8 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row["Tags"] = tags.replace(" #", ", ").lower()
                 row["Tags"] = tuple(row["Tags"].split(", "))
 
+            row["Tags"] = ' '.join(row["Tags"])
+
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
             if self.is_bs_account(account_map, row['Payee']) and not row['Category']:
                 if not row['Notes']:
@@ -129,6 +131,10 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
             # Exclude if Payee = Starting Balance or account is an Off-budget account
             if row['Payee'] == "Starting Balance" or row["Account"] in off_budget_accounts:
+                row['Exclude'] = True
+
+            # Exclude all but cleared transactions
+            if row['Cleared'] == "Reconciled" or row['Cleared'] == "Not cleared":
                 row['Exclude'] = True
 
         #
@@ -162,7 +168,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                     flag=flags.FLAG_OKAY,
                     payee=trans_payee,
                     narration=trans_narration,
-                    tags=set(filter(None, trans_tags)),
+                    tags=set(filter(None, (trans_tags,))),
                     links=set(),
                     postings=[],
                 )
