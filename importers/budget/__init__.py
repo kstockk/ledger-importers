@@ -20,6 +20,14 @@ BEAN_DATA_DIR = home_directory + "/Ledger/mappings"
 ACCOUNT_MAP = "actual_budget_mappings.csv"
 MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
+def parse_date(text):
+    for fmt in ('%Y-%m-%d', '%d/%m/%Y'):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            pass
+    raise ValueError('no valid date format found')
+
 class ActualBudgetImporter(importer.ImporterProtocol):
     def __init__(self, currency='AUD', file_encoding='utf-8'):
         self.currency = currency
@@ -155,7 +163,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         entries = []
         for dict in trans_list:
             for index, (key, values) in enumerate(dict.items()):
-                parsed_date = datetime.strptime(key[0], '%d/%m/%Y').date()
+                parsed_date = parse_date(key[0])
                 trans_payee = key[3]
                 trans_narration = key[4]
                 trans_tags = key[5]
@@ -203,7 +211,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # Create transfer entries
         for dict in tfr_list:
             for index, (key, values) in enumerate(dict.items()):
-                parsed_date = datetime.strptime(key[0], '%d/%m/%Y').date()
+                parsed_date = parse_date(key[0])
                 meta = data.new_metadata(f.name, index)
 
                 txn = data.Transaction(
