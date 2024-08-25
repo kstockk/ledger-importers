@@ -37,7 +37,11 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         with open(file_.name, encoding=self.file_encoding) as f:
             header = f.readline().strip()
         
-        return re.match(header, CSV_HEADER)
+        headers = header.split(',')
+        csv_headers = CSV_HEADER.split(',')
+
+        # return True is all csv_headers in file_headers
+        return all(h in headers for h in csv_headers)
 
     def get_account_map(self):
         # Get account mapping for Budget accounts --> Ledger accounts
@@ -120,6 +124,9 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
             row["Tags"] = ', '.join(row["Tags"])
 
+            # Remove (SPLIT x OF y) in notes
+            row["Notes"] = re.sub(r'\(SPLIT \d+ OF \d+\)', '', row["Notes"]).strip()
+
             # If payee is a balance sheet account and there is no cateogry then assume it to be a transfer
             if self.is_bs_account(account_map, row['Payee']) and not row['Category']:
                 if not row['Notes']:
@@ -143,6 +150,10 @@ class ActualBudgetImporter(importer.ImporterProtocol):
 
             # Exclude all but cleared transactions
             if row['Cleared'] == "Reconciled" or row['Cleared'] == "Not cleared":
+                row['Exclude'] = True
+
+            # Exclude if Abs = 0
+            if row['Abs'] == 0:
                 row['Exclude'] = True
 
         #
