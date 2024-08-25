@@ -152,6 +152,10 @@ class ActualBudgetImporter(importer.ImporterProtocol):
             # if row['Cleared'] == "Reconciled" or row['Cleared'] == "Not cleared":
             #     row['Exclude'] = True
 
+            # Exclude if not cleared
+            if row['Cleared'] == "Not cleared":
+                row['Exclude'] = True
+
             # Exclude all if dated after today
             if row['Date'] > datetime.today().date():
                 row['Exclude'] = True
