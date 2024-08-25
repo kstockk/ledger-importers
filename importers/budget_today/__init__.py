@@ -157,7 +157,7 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 row['Exclude'] = True
 
             # Exclude all if dated after today
-            if row['Date'] > datetime.today().date():
+            if parse_date(row['Date']) > datetime.today().date():
                 row['Exclude'] = True
 
             # Exclude if Abs = 0
