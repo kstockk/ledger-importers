@@ -13,10 +13,8 @@ from datetime import datetime
 from itertools import chain, groupby
 from operator import itemgetter
 
-home_directory = os.path.expanduser( '~' )
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount,Cleared"
-# BEAN_DATA_DIR = "/bean/data"
-BEAN_DATA_DIR = home_directory + "/Ledger/mappings"
+BEAN_DATA_DIR = os.environ.get('LEDGER_DATA_DIR') + "/mappings"
 ACCOUNT_MAP = "actual_budget_mappings.csv"
 MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
