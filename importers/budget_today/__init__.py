@@ -14,7 +14,8 @@ from itertools import chain, groupby
 from operator import itemgetter
 
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount,Cleared"
-BEAN_DATA_DIR = os.environ.get('LEDGER_DATA_DIR') + "/mappings"
+LEDGER_DATA_DIR = os.environ.get('LEDGER_DATA_DIR', '/Ledger')
+BEAN_DATA_DIR = os.path.join(LEDGER_DATA_DIR, "mappings")
 ACCOUNT_MAP = "actual_budget_mappings.csv"
 MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
