@@ -13,7 +13,8 @@ from datetime import datetime
 from itertools import chain, groupby
 from operator import itemgetter
 
-home_directory = os.path.expanduser( '~' )
+LEDGER_DATA_DIR = os.environ.get('LEDGER_DATA_DIR', '/Ledger')
+BEAN_DATA_DIR = os.path.join(LEDGER_DATA_DIR, "mappings")
 CSV_HEADER = ["Date", "Type", "Description", "Unit price", "Units", "Amount"]
 
 class IOOFImporter(importer.ImporterProtocol):
@@ -32,7 +33,7 @@ class IOOFImporter(importer.ImporterProtocol):
         try:
             # found_csv = os.path.exists('ioof_transactions_mapping.csv')
             # csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
-            with open(home_directory + '/Ledger/mappings/ioof_transactions_mappings.csv', encoding='utf-8-sig') as f:
+            with open(BEAN_DATA_DIR + '/ioof_transactions_mappings.csv', encoding='utf-8-sig') as f:
                 header = f.readline().strip()
                 if re.match(header, "trans_type,account_1,account_1_value,account_2,account_2_value,asset_name_2,asset_code_2"):
                     reader = csv.reader(f)
