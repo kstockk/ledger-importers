@@ -8,11 +8,11 @@ from importers import ioof_super
 
 import beangulp
 
-importers = [
+CONFIG = [
     actual_budget.Importer("Assets:Account"),
     ioof_super.Importer("Assets:Account2")
 ]
 
 if __name__ == '__main__':
-    ingest = beangulp.Ingest(importers)
+    ingest = beangulp.Ingest(CONFIG)
     ingest()
