@@ -1,12 +1,16 @@
 
 from beancount.core.number import D
-from beancount.ingest import importer
+
 from beancount.core import amount
 from beancount.core import flags
 from beancount.core import data
 
+import beangulp
+from beangulp import mimetypes
+from beangulp.testing import main
+
 import csv
-import os
+from os import path, environ
 import re
 
 from datetime import datetime
@@ -14,8 +18,8 @@ from itertools import chain, groupby
 from operator import itemgetter
 
 CSV_HEADER = "Account,Date,Payee,Notes,Category,Amount,Cleared"
-LEDGER_DATA_DIR = os.environ.get('LEDGER_DATA_DIR', '/Ledger')
-BEAN_DATA_DIR = os.path.join(LEDGER_DATA_DIR, "mappings")
+LEDGER_DATA_DIR = environ.get('LEDGER_DATA_DIR', '/Ledger')
+BEAN_DATA_DIR = path.join(LEDGER_DATA_DIR, "mappings")
 ACCOUNT_MAP = "actual_budget_mappings.csv"
 MAP_HEADER = "Budget Account,Ledger Account,Off-Budget"
 
@@ -27,13 +31,14 @@ def parse_date(text):
             pass
     raise ValueError('no valid date format found')
 
-class ActualBudgetImporter(importer.ImporterProtocol):
-    def __init__(self, currency='AUD', file_encoding='utf-8'):
+class Importer(beangulp.Importer):
+    def __init__(self, account, currency='AUD', file_encoding='utf-8'):
+        self.importer_account = account
         self.currency = currency
         self.file_encoding = file_encoding
 
-    def identify(self, file_):
-        with open(file_.name, encoding=self.file_encoding) as f:
+    def identify(self, filepath):
+        with open(filepath, encoding=self.file_encoding) as f:
             header = f.readline().strip()
         
         headers = header.split(',')
@@ -42,12 +47,22 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         # return True is all csv_headers in file_headers
         return all(h in headers for h in csv_headers)
 
+    # def filename(self, filepath):
+    #     """Return the optional renamed account filename."""
+    #     if self.basename:
+    #         return self.basename + path.splitext(filepath)[1]
+
+    def account(self, filepath):
+        """Return the account against which we post transactions."""
+        return self.importer_account
+
+
     def get_account_map(self):
         # Get account mapping for Budget accounts --> Ledger accounts
         # CSV should contain three columns "Budget Account, Ledger Account, Off-Budget"
         # 1nd Column (Budget Acount) will be the key
         try:
-            found_csv = os.path.exists(ACCOUNT_MAP)
+            found_csv = path.exists(ACCOUNT_MAP)
             csv_path = BEAN_DATA_DIR + "/" if not found_csv else ""
             with open(csv_path + "/" + ACCOUNT_MAP) as f:
                 header = f.readline().strip()
@@ -88,9 +103,9 @@ class ActualBudgetImporter(importer.ImporterProtocol):
         except KeyError:
             return False
 
-    def extract(self, f):
+    def extract(self, filepath, existing):
         # Store csv rows in dict
-        with open(f.name, mode='r') as f:
+        with open(filepath, mode='r') as f:
             rows = [row for row in csv.DictReader(f)]
 
         # Get account mappings
@@ -265,3 +280,4 @@ class ActualBudgetImporter(importer.ImporterProtocol):
                 entries.append(txn)
 
         return entries
+

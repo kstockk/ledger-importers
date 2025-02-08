@@ -1,10 +1,14 @@
 
 from beancount.core.number import D
-from beancount.ingest import importer
+
 from beancount.core import amount
 from beancount.core.position import Cost
 from beancount.core import flags
 from beancount.core import data
+
+import beangulp
+from beangulp import mimetypes
+from beangulp.testing import main
 
 import csv
 import os
@@ -17,14 +21,19 @@ LEDGER_DATA_DIR = os.environ.get('LEDGER_DATA_DIR', '/Ledger')
 BEAN_DATA_DIR = os.path.join(LEDGER_DATA_DIR, "mappings")
 CSV_HEADER = ["Date", "Type", "Description", "Unit price", "Units", "Amount"]
 
-class IOOFImporter(importer.ImporterProtocol):
-    def __init__(self, file_encoding='utf-8-sig'):
+class Importer(beangulp.Importer):
+    def __init__(self, account, file_encoding='utf-8-sig'):
+        self.importer_account = account
         self.file_encoding = file_encoding
 
-    def identify(self, file_):
-        with open(file_.name, encoding=self.file_encoding) as f:
+    def identify(self, filepath):
+        with open(filepath, encoding=self.file_encoding) as f:
             header = f.readline().strip().split(',')
         return header == CSV_HEADER
+
+    def account(self, filepath):
+        """Return the account against which we post transactions."""
+        return self.importer_account
 
     def get_mappings(self):
         # Get account mapping for Budget accounts --> Ledger accounts
@@ -54,12 +63,12 @@ class IOOFImporter(importer.ImporterProtocol):
         except KeyError as e:
             return "no account mappings specified for {}".format(str(e))
 
-    def extract(self, file_):
+    def extract(self, filepath, existing):
         # Create entries
         # Create transaction entries
         entries = []
         
-        with open(file_.name, mode='r', encoding=self.file_encoding) as f:
+        with open(filepath, mode='r', encoding=self.file_encoding) as f:
             for index, row in enumerate(csv.DictReader(f)):
                 parsed_date = datetime.strptime(row["Date"], '%d/%m/%Y').date()
                 trans_type = row["Type"]
@@ -135,3 +144,4 @@ class IOOFImporter(importer.ImporterProtocol):
                     entries.append(txn)
 
         return entries
+
