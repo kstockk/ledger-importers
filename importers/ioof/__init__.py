@@ -1,6 +1,6 @@
 
 from beancount.core.number import D
-from beancount.loader import importer
+from beancount.ingest import importer
 from beancount.core import amount
 from beancount.core.position import Cost
 from beancount.core import flags
@@ -17,7 +17,7 @@ LEDGER_DATA_DIR = os.environ.get('LEDGER_DATA_DIR', '/Ledger')
 BEAN_DATA_DIR = os.path.join(LEDGER_DATA_DIR, "mappings")
 CSV_HEADER = ["Date", "Type", "Description", "Unit price", "Units", "Amount"]
 
-class IOOFImporter(importer.Importer):
+class IOOFImporter(importer.ImporterProtocol):
     def __init__(self, file_encoding='utf-8-sig'):
         self.file_encoding = file_encoding
 

@@ -1,5 +1,5 @@
 from beancount.core.number import D
-from beancount.loader import importer
+from beancount.ingest import importer
 from beancount.core import amount
 from beancount.core import flags
 from beancount.core import data
@@ -15,7 +15,7 @@ import collections
 
 # Credits to https://gist.github.com/mterwill/7fdcc573dc1aa158648aacd4e33786e8#file-importers-chase-py
 
-class CSVImporter(importer.Importer):
+class CSVImporter(importer.ImporterProtocol):
     def identify(self, f):
         return re.match("c_.*\.csv", os.path.basename(f.name))
 

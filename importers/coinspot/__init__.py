@@ -1,6 +1,6 @@
 
 from beancount.core.number import D
-from beancount.loader import importer
+from beancount.ingest import importer
 from beancount.core import amount
 from beancount.core.position import Cost
 from beancount.core import flags
@@ -15,7 +15,7 @@ from operator import itemgetter
 
 CSV_HEADER = ["Transaction Date","Type","Market","Amount","Rate inc. fee","Rate ex. fee","Fee","Fee AUD (inc GST)","GST AUD","Total AUD","Total (inc GST)"]
 
-class CoinSpotImporter(importer.Importer):
+class CoinSpotImporter(importer.ImporterProtocol):
     def __init__(self, file_encoding='utf-8-sig'):
         self.file_encoding = file_encoding
 
