@@ -1,6 +1,6 @@
 
 from beancount.core.number import D
-from beancount.ingest import importer
+from beancount.loader import importer
 from beancount.core import amount
 from beancount.core import flags
 from beancount.core import data
@@ -27,7 +27,7 @@ def parse_date(text):
             pass
     raise ValueError('no valid date format found')
 
-class ActualBudgetImporter(importer.ImporterProtocol):
+class ActualBudgetImporter(importer.Importer):
     def __init__(self, currency='AUD', file_encoding='utf-8'):
         self.currency = currency
         self.file_encoding = file_encoding

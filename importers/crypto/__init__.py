@@ -1,6 +1,6 @@
 
 from beancount.core.number import D
-from beancount.ingest import importer
+from beancount.loader import importer
 from beancount.core import amount
 from beancount.core.position import Cost
 from beancount.core import flags
@@ -15,7 +15,7 @@ from operator import itemgetter
 
 CSV_HEADER = "Id,Wallet,Transaction Date,Type,Subtype,Asset,Amount,Costbase,Remarks,Txid,Realised.TAX_GAIN"
 
-class CryptoImporter(importer.ImporterProtocol):
+class CryptoImporter(importer.Importer):
     def __init__(self, file_encoding='utf-8-sig'):
         self.file_encoding = file_encoding
 
