@@ -42,7 +42,8 @@ ACCOUNT_MAPPING = {
     "Hourly": "Income:Freelance:Upwork:Hourly",
     "Bonus": "Income:Freelance:Upwork:Bonus",
     "GST": "Expenses:Freelance:Upwork:GST",
-    "Connects": "Expenses:Freelance:Upwork:Connects",
+    "Connects": "Expenses:Freelance:Upwork",
+    "Subscription": "Expenses:Freelance:Upwork",
     "Service Fee": "Expenses:Freelance:Upwork:Service-Fees",
     "Payment": "Liabilities:Suspense",
 }
@@ -106,7 +107,7 @@ class Importer(beangulp.Importer):
                             account_cash, amount.Amount(D(amnt), self.currency), None, None, None, None
                         ),
                         data.Posting(
-                            account_pnl, amount.Amount(D(amnt), self.currency), None, None, None, None
+                            account_pnl, amount.Amount(D(amnt)*-1, self.currency), None, None, None, None
                         )
                     ],
                 )
