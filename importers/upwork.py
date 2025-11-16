@@ -19,6 +19,7 @@ CSV_HEADER = [
     "Description 1",
     "Description 2",
     "Description 3",
+    "Entered Description",
     "Agency",
     "Freelancer",
     "Team",
@@ -93,7 +94,6 @@ class Importer(beangulp.Importer):
                 amnt = row["Amount $"]
 
                 meta = data.new_metadata(f.name, index)
-
                 txn = data.Transaction(
                     meta=meta,
                     date=parsed_date,
